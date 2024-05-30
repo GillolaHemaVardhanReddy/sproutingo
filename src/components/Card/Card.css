@@ -1,0 +1,130 @@
+.card-holder{
+    display: flex;
+    padding: 10px 0px;
+    justify-content: center;
+    height: 195px;
+    align-items: center;
+    /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+    /* box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px; */
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+    box-sizing: border-box;
+    width: 448px;
+}
+
+.card-left{
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+}
+
+.card-category-holder{
+    display: flex;
+}
+
+.card-category-holder>img{
+    width: 16px;
+    height: 16px;
+}
+.card-price{
+    color: rgb(129, 127, 124);
+}
+
+.card-detail-text{
+    color: rgb(78, 78, 77);
+}
+
+.read-more-container{
+    line-height: 1;
+}
+
+.read-more-text{
+    display: none;
+}
+.read-more-btn{
+    color: #111;
+}
+
+.card-right{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 250px;
+}
+
+.card-right>img{
+    width: 180px;
+    height: 140px;
+    border-radius: 8px;
+    position: relative;
+    z-index: 5;
+}
+
+.card-add-button{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    width: 120px;
+    height: 45px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    position: relative;
+    bottom: 30px;
+    z-index: 10;
+    cursor: pointer;
+}
+
+.card-add-button:active{
+    background: rgb(230, 227, 227);
+}
+
+.card-customizable{
+    color: rgb(129, 127, 124);
+    font-size: small;
+    margin-top: -24px;
+}
+
+@media all and (max-width:480px){
+    .extra{
+        width: 100%;
+    }
+    .card-holder{
+        padding: 5px 0px;
+        height: 220px;
+        width: 308px;
+    }
+    
+    .card-left{
+        width: 160px;
+    }
+    .card-category-holder>img{
+        width: 12px;
+        height: 12px;
+    }
+    
+    .read-more-container{
+        line-height: 1;
+    }
+    
+    .card-right{
+        width: 180px;
+    }
+    
+    .card-right>img{
+        width: 120px;
+        height: 100px;
+    }
+    
+    .card-add-button{
+        width: 90px;
+        height: 31px;
+        bottom: 18px;
+    }
+    
+    .card-customizable{
+        margin-top: -20px;
+    }
+}
