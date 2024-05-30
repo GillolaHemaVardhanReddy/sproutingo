@@ -5,7 +5,6 @@ import MainLayOut from './layouts/MainLayOut';
 const SiteRouter = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<MainLayOut/>}>
-      <Route/>
     </Route>
   )
 )
