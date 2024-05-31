@@ -16,7 +16,7 @@ const Hero = () => {
                     <p>Every</p>
                 </div>
                 <p>Healthy</p>
-                <p>Food you need</p>
+                <p>Food you<br/>need</p>
             </div>
             <div className='hero-latest-btn'>
                 <div>Subscription</div>
