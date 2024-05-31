@@ -1,0 +1,86 @@
+.service-main{
+    background: linear-gradient(white,#f4e4d4,#b1efbf,#b1efbf,#c7edd0,white);
+    display: flex;
+    flex-direction: column;
+}
+
+.service-heading{
+    font-size: 52px;
+    margin: auto;
+    font-weight: 800;
+    user-select: none;
+}
+
+.service-underline{
+    width: 380px;
+    height: 3px;
+    background-color: black;
+    margin: auto;
+}
+
+.services-holder{
+    max-width: 100%;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 40px;
+}
+
+@media all and (max-width:1280px){
+    .service-heading{
+        font-size: 48px;
+        font-weight: 700;
+    }
+    .service-underline{
+        width: 360px;
+        height: 4px;
+    }
+}
+
+@media all and (max-width:1024px){
+    .service-heading{
+        font-size: 42px;
+        font-weight: 650;
+    }
+    .service-underline{
+        width: 300px;
+        height: 4px;
+    }
+}
+
+@media all and (max-width:800px){
+    .service-heading{
+        font-size: 38px;
+        font-weight: 620;
+    }
+    .service-underline{
+        width: 280px;
+        height: 4px;
+    }
+}
+@media all and (max-width:580px){
+    .service-heading{
+        font-size: 30px;
+        font-weight: 580;
+    }
+    .service-underline{
+        width: 200px;
+        height: 4px;
+    }
+}
+@media all and (max-width:480px){
+    .service-heading{
+        font-size: 24px;
+        font-weight: 400;
+    }
+    .service-underline{
+        width: 180px;
+        height: 2px;
+    }
+    .services-holder{
+        max-width: 100%;
+        margin: 20px auto;
+        grid-template-columns: repeat(1,1fr);
+        gap: 20px;
+    }
+}

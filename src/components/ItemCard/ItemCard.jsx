@@ -1,9 +1,9 @@
 import React, { useRef } from 'react'
-import './Card.css'
+import './ItemCard.css'
 import veg_image from '../../Assets/veg_icon.png'
 import sample_item from '../../Assets/sample_item.jpg'
 
-const Card = () => {
+const ItemCard = () => {
   const referReadMore = useRef()
   const handleReadMore = ()=> referReadMore.current.classList.toggle('read-more-text')
   return (
@@ -37,4 +37,4 @@ const Card = () => {
   )
 }
 
-export default Card
+export default ItemCard

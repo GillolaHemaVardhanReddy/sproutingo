@@ -1,36 +1,53 @@
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import logo from "../../Assets/Card_2_page-0001-removebg-preview.png"
 import "./Navbar.css"
 import { FaTimes,FaBars } from "react-icons/fa"
+import { Link } from "react-router-dom"
+
 export const Navbar = ()=>{
     const navRef = useRef();
     const showNavbar = ()=>{
         navRef.current.classList.toggle("responsive_navbar");
     }
+
+    const [active,setActive] = useState("Home")
+
+   const handleActive = (e)=>{
+    setActive(e.target.id)
+   }
+
    return ( <div>
         <div className="navbar">
-            <div className="last">
-                <FaBars className="nav-btn open-nav-btn" onClick={showNavbar} />
-            </div>
             <div className="left">
                 <img src={logo} alt="" />
             </div>
             <div className="middle" ref={navRef}>
-                <div className="text">
-                    Home
+                <Link to='/' className="overRideLink">
+                    <div className="text" id="Home" onClick={handleActive}>
+                        Home {active==="Home"&& <hr/>}
+                    </div>
+                </Link>
+                <Link to='/menu' className="overRideLink">
+                    <div className="text" id="Menu" onClick={handleActive}>
+                        Menu  {active==="Menu"&& <hr/>}
+                    </div>
+                </Link>
+                <Link to='/subscribe' className="overRideLink">
+                <div className="text" id="Subscription" onClick={handleActive}>
+                    Subscription  {active==="Subscription"&& <hr/>}
                 </div>
-                <div className="text">
-                    Menu
+                </Link>
+                <Link to='/about' className="overRideLink">
+                <div className="text" id="About" onClick={handleActive}>
+                    About  {active==="About"&& <hr/>}
                 </div>
-                <div className="text">
-                    Subscriptions
-                </div>
-                <div className="text">
-                    About
-                </div>
+                </Link>
                 <FaTimes className="nav-btn nav-close-btn" onClick={showNavbar}/>
             </div>
             <div className="right">
+                <div className="last">
+                    <FaBars className="nav-btn open-nav-btn" onClick={showNavbar} />
+                </div>
                 <div className="person text">
                     <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
