@@ -19,8 +19,8 @@ const Hero = () => {
                 <p>Food you<br/>need</p>
             </div>
             <div className='hero-latest-btn'>
-                <div>Subscription</div>
-                <img src={arrow_icon} alt='arrow icon'/>
+                <div className='hero-latest-btn-text'>Subscription</div>
+                <img src={arrow_icon} className='arrow' alt='arrow icon'/>
             </div>
         </div> 
     </div>
