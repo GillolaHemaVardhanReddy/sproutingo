@@ -8,7 +8,7 @@ const router = express.Router()
 router.post('/',Authentication,create)
 
 // get product by id (unuthenticated or authenticated)
-router.get('/:id',getProductById)
+router.get('/find/:id',getProductById)
 
 // delete product by id (authenticated user is admin)
 router.delete('/:id',Authentication,deleteProduct)

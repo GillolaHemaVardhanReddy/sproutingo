@@ -1,4 +1,4 @@
-import { getFilteredProduct } from "../db/product.db.js"
+import { getFilteredProduct, getProductByTag, searchProduct } from "../db/product.db.js"
 import Like from "../models/likes.model.js"
 import Product from "../models/product.model.js"
 import { returnError } from "../utils/error.js"
@@ -139,18 +139,25 @@ export const random = async (req,res,next)=>{
 }
 
 
-export const getByTag = (req,res,next)=>{
+export const getByTag = async (req,res,next)=>{
+    const tags = req.query.tags.split(",")
     try{
-
-    }catch(err){
-        
+        const finalResp = await getProductByTag(tags);
+        res.status(200).json(finalResp)
+    }catch(err){    
+        next(err)
     }
 }
 
-export const search = (req,res,next)=>{
+export const search = async (req,res,next)=>{
+    const query = req.query.q
     try{
-
+        if(!query){
+            return  res.json('no product found').status(200)
+        }
+        const finalResp = await searchProduct(query);
+        res.status(200).json(finalResp)
     }catch(err){
-        
-    }
+        next(err)
+    }   
 }

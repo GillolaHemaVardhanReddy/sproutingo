@@ -2,6 +2,7 @@ import mongoose,{} from "mongoose";
 import User from "../models/user.model.js";
 import Product from "../models/product.model.js";
 import Like from "../models/likes.model.js";
+import { returnError } from "../utils/error.js";
 
 export const getFilteredProduct = async (userId)=>{
     try{
@@ -46,3 +47,23 @@ export const getFilteredProduct = async (userId)=>{
         throw err
     }
 }
+
+export const getProductByTag = async (tags)=>{
+    try{
+        const finalRes = await Product.find( { tags: { $in : tags } } ).limit(20)
+        return finalRes
+    }catch(err){
+        throw err
+    }
+}
+
+export const searchProduct = async (query) => {
+    try {
+        const finalRes = await Product.find({
+            name: { $regex: query, $options: "i" },
+        }).limit(40);
+        return finalRes;
+    } catch (err) {
+        throw new Error(`Error in searchProduct`);
+    }
+};
