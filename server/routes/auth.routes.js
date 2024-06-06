@@ -1,5 +1,5 @@
 import express from "express";
-import { activate, signin, signup } from '../controllers/auth.controllers.js'
+import { activate, signin, signout, signup } from '../controllers/auth.controllers.js'
 import { signinRules, signupRules, validate } from "../validators/auth.validator.js";
 
 const router = express.Router()
@@ -12,5 +12,8 @@ router.post('/activate-account' , activate)
 
 // signin user
 router.post('/signin' , signinRules , validate ,signin)
+
+//sigout user
+router.post('/signout',signout)
 
 export default router

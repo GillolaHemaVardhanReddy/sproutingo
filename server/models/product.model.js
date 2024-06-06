@@ -38,7 +38,7 @@ const productSchema = new mongoose.Schema({
     desc: {
         type: String,
         required: true,
-        minlength: 60,
+        minlength: 10, // just for testing api
         maxlength: 150,
     },
     category: {
@@ -49,19 +49,10 @@ const productSchema = new mongoose.Schema({
         type: [String],
         required: true,
     },
-    likes:{
-        type: Number,
-        default: 0
-    },
-    dislikes:{
-        type: Number,
-        default: 0
-    },
-    mixed_products: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Product', // refers to this model itself
-        required: true,
-    },
+    // mixed_products: {
+    //     type: [mongoose.Schema.Types.ObjectId],
+    //     ref: 'Product', // refers to this model itself
+    // },
 },{timestamps:true});
 
 productSchema.pre('save',(next)=>{

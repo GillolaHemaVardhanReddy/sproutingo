@@ -84,7 +84,7 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: Number,
-        unique: true,
+        // unique: true,
         validate: {
             validator: phoneValidate,
             message: props => `${props.value} is not a valid 10 digit phone number!`
@@ -99,16 +99,10 @@ const userSchema = new mongoose.Schema({
         ref: 'Product', // refers to Product model
         default: [],
     },
-    liked_products:{
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Product', // refers to product model
-        default: [],
-    },
-    disliked_products:{
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Product', // refers to product model
-        default: [],
-    },
+    role: {
+        type:String,
+        default: 'user'
+    }
 },{timestamps:true});
 
 

@@ -3,18 +3,20 @@ import { returnError } from "../utils/error.js"
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
-import cookieParser from "cookie-parser"
+import mongoose from "mongoose"
 dotenv.config()
 
 export const signup = async (req,res,next)=>{ // body is email,name,password
     try{
+        const isUser = await User.findOne({email:req.body.email})
+        if(isUser) return next(returnError(409,'user already exist'))
         const newUser = User(req.body)
         await newUser.save()
         const {password , ...remain} = newUser.toObject();
         res.status(201).json(remain)
     }catch(err){
-        if(err.code===11000) return next(returnError(409,'user already exist'))
-        // if (err.name === 'ValidationError') return next(returnError(400, 'Validation Error'));
+        if (err instanceof mongoose.CastError) return next(returnError(400, 'enter valid details to update'));
+        if (err.name === 'ValidationError') return next(returnError(400, 'Validation Error'));
         next(err)
     }
 }
@@ -42,6 +44,17 @@ export const signin = async (req,res,next)=>{
         next(err)
     }
 }
+
+
+export const signout = async (req,res,next)=>{
+    try{
+        res.clearCookie('auth', { maxAge: 0 })
+        res.status(200).json('logged out successfully')
+    }catch(err){
+        next(err)
+    }
+}
+
 
 export const activate = async (req,res,next)=>{
     try{

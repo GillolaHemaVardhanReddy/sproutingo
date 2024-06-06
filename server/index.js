@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from 'dotenv'
 import { connectToDb } from "./core/connect.db.js";
 import authRoutes from './routes/auth.routes.js'
+import productRoutes from './routes/product.routes.js'
 import cookieParser from "cookie-parser";
 dotenv.config()
 
@@ -19,6 +20,7 @@ app.use(express.json())
 
 // routes middleware
 app.use('/api/auth',authRoutes)
+app.use('/api/product',productRoutes)
 
 // error handler middleware
 app.use((err,req,res,next)=>{
