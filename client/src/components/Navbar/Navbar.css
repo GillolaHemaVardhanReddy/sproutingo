@@ -2,7 +2,15 @@
     margin:0;
     padding:0;
 }
-
+.search-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.search-icon{
+    width: 30px;
+    cursor: pointer;
+}
 .overRideLink{
     color: white;
     text-decoration: none;
