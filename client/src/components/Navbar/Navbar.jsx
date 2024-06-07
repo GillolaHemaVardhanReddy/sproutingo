@@ -52,7 +52,7 @@ export const Navbar = ()=>{
                 <div className="search-container">
                     <img src={search_icon} alt="" className="search-icon"/>
                 </div>
-                <Link to='/signup'>
+                <Link to='/auth/signin'>
                     <div className="person text">
                         <svg xmlns="http://www.w3.org/2000/svg" width="2rem" height="2rem" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>

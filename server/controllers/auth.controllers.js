@@ -10,6 +10,7 @@ sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
 export const signup = async (req,res,next)=>{ // body is email,name,password
     try{
+        console.log('signup controller')
         const isUser = await User.findOne({email:req.body.email})
         if(isUser) return next(returnError(409,'user already exist'))
         const newUser = User(req.body)
@@ -26,6 +27,7 @@ export const signup = async (req,res,next)=>{ // body is email,name,password
 export const signin = async (req,res,next)=>{
     try{
         const user = await User.findOne({email:req.body.email})
+        console.log('signin controller')
         if(user){
             const isCorrect = await bcrypt.compare(req.body.password,user.password)
             if(isCorrect){
@@ -49,6 +51,7 @@ export const signin = async (req,res,next)=>{
 
 
 export const signout = async (req,res,next)=>{
+    console.log('signout controller')
     try{
         res.clearCookie('auth', { maxAge: 0 })
         res.status(200).json('logged out successfully')
@@ -58,8 +61,9 @@ export const signout = async (req,res,next)=>{
 }
 
 export const signupmail = async (req,res,next)=>{
+    console.log('signup mail controller')
     const {name,email,password} = req.body
-    try{
+    try{ 
         const resp = await User.findOne({email})
         if(resp){
             return next(returnError(400,'email is already taken'))
@@ -81,8 +85,8 @@ export const signupmail = async (req,res,next)=>{
         }
         await sgMail.send(emailData)
         console.log('signup email sent successful')
-        res.json({
-            message: `Email has been sent to ${email} .Follow the instruction to activate your account`
+        res.status(200).json({
+            success: true, message: `Email has been sent to ${email} .Follow the instruction to activate your account`
         })
         
     }catch(err){
@@ -92,6 +96,7 @@ export const signupmail = async (req,res,next)=>{
 
 export const Activate = async (req,res,next)=>{
     const {token} = req.body;
+    console.log('activation controller')
     try{
         if(token){
             try{
@@ -99,7 +104,8 @@ export const Activate = async (req,res,next)=>{
                 const {name,email,password} = jwt.decode(token)
                 const newUser = new User({name,email,password})
                 await newUser.save()
-                res.json({
+                res.status(200).json({
+                    success: true,
                     message: 'Signup successful'
                 })
             }catch(err){
