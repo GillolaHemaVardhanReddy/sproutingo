@@ -1,4 +1,4 @@
-import { getFilteredProduct, getProductByTag, searchProduct } from "../db/product.db.js"
+import { checkProductExist, getFilteredProduct, getProductByTag, searchProduct } from "../db/product.db.js"
 import Like from "../models/likes.model.js"
 import Product from "../models/product.model.js"
 import { returnError } from "../utils/error.js"
@@ -20,10 +20,8 @@ export const create = async (req,res,next)=>{
 
 export const getProductById = async (req,res,next)=>{
     try{
-        if (!mongoose.isValidObjectId(req.params.id)) 
-            return next( returnError(400,'Invalid product id'));
-        const product = await Product.findById(req.params.id)
-        if(!product) return next(returnError(404,'product not found'))
+        if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
+        const product = await checkProductExist(req.params.id)
         res.status(200).json({success:true,data:product})
     }catch(err){
         next(err)
@@ -35,8 +33,7 @@ export const deleteProduct = async (req,res,next)=>{
     if(req.role==='user') return next(returnError(401,'Unauthorized user'))
     try{
         if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
-        const product = await Product.findById(req.params.id)
-        if(!product) return next(returnError(404,'product not found'))
+        await checkProductExist(req.params.id)
         await Product.findOneAndDelete({_id:req.params.id})
         res.status(200).json({success:true,data:'product successfully deleted'})
     }catch(err){
@@ -49,8 +46,7 @@ export const update = async (req,res,next)=>{
     if(req.role==='user') return next(returnError(401,'Unauthorized user'))
     try{
         if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
-        const product = await Product.findById(req.params.id)
-        if(!product) return next(returnError(404,'product not found'))
+        await checkProductExist(req.params.id)
         
         const updatedProduct = await Product.findByIdAndUpdate({_id:req.params.id},{
             $set: req.body
@@ -135,11 +131,7 @@ export const random = async (req,res,next)=>{
         let finalList;
         if(req.user){
             finalList = await getFilteredProduct(req.user.id)
-            if(finalList){
-                return res.status(200).json(finalList)
-            }else{
-                return next(returnError(500,'Problem fetching data'))
-            }
+            return res.status(200).json({success:true,data:finalList})
         }else{
             finalList = await getFilteredProduct();
             return res.status(200).json({

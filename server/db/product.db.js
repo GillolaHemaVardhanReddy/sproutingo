@@ -42,6 +42,7 @@ export const getFilteredProduct = async (userId)=>{
                 }
             ]);
         }
+        if(!finalResp) throw returnError(500,'Problem fetching data')
         return finalResp
     }catch(err){
         throw err
@@ -51,6 +52,7 @@ export const getFilteredProduct = async (userId)=>{
 export const getProductByTag = async (tags)=>{
     try{
         const finalRes = await Product.find( { tags: { $in : tags } } ).limit(20)
+        if(!finalRes) throw returnError(404,"no products with specified tags")
         return finalRes
     }catch(err){
         throw err
@@ -62,8 +64,19 @@ export const searchProduct = async (query) => {
         const finalRes = await Product.find({
             name: { $regex: query, $options: "i" },
         }).limit(40);
+        if(!finalRes) throw returnError(404,"no products with specified tags")
         return finalRes;
     } catch (err) {
         throw new Error(`Error in searchProduct`);
     }
 };
+
+export const checkProductExist = async (id)=>{
+    try{
+        const product = await Product.findById(id)
+        if(!product) throw returnError(404,'product not found')
+        else return product
+    }catch(err){
+        throw err;
+    }
+}
