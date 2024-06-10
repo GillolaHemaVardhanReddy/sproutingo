@@ -10,6 +10,7 @@ export const signinRules = [
     check('email','enter a valid email').isEmail(),
     check('password', 'Password must be at least 6 characters long').isLength({ min: 6 })
 ]
+
 export const validate = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

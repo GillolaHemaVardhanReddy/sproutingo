@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
 import axios from 'axios'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-const SignUp = () => {
-  const [userDetails,setUserDetails] = useState({})
+const Login = () => {
+    const [userDetails,setUserDetails] = useState({})
   const [disable,setDisable] = useState(false)
   const handleChange = (e)=>{
     setUserDetails(prev=>{
@@ -12,21 +12,19 @@ const SignUp = () => {
     }
     const submitForm = async (e)=>{
       e.preventDefault()
-      const resp = await axios.post('/auth/signup',userDetails)
+      const resp = await axios.post('/auth/signin',userDetails)
       if(resp.data.success) setDisable(true)
     }
-
   return (
     <>
       <form onSubmit={submitForm}>
-        <input type='text' required name='name' onChange={handleChange}/>
         <input type='email' required name='email' onChange={handleChange}/>
         <input type='password' required name='password' onChange={handleChange}/>
         <button type='submit' disabled={disable}>Submit</button>
       </form>
-      <p>have an account? <Link to='/auth/signin'>Login</Link></p>
+      <p>Don't have an account? <Link to='/auth/signup'>signup</Link></p>
     </>
   )
 }
 
-export default SignUp
+export default Login
