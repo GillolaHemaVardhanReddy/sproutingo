@@ -1,6 +1,4 @@
 import mongoose from "mongoose";
-import bcrypt from 'bcrypt'
-import { returnError } from "../utils/error.js";
 
 // validation methods
 function pincodeValidate(v) {
@@ -59,6 +57,10 @@ const cartSchema = new mongoose.Schema({
         required: true,
         min: 1,
     },
+    price: {
+        type: Number,
+        required: true,
+    },
 });
 
 
@@ -94,11 +96,6 @@ const userSchema = new mongoose.Schema({
         type: [addressSchema],
         default: [],
     },
-    wishlist: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Product', // refers to Product model
-        default: [],
-    },
     role: {
         type:String,
         default: 'user'
@@ -107,18 +104,9 @@ const userSchema = new mongoose.Schema({
 
 
 
-userSchema.pre('save', async function(next){
-    console.log('entered mongoose middleware to encrypt password',this.password)
-    try{
-        const salt = await bcrypt.genSalt();
-        this.password = await bcrypt.hash(this.password,salt);
-        console.log('password hashed is: ',this.password)
-        next()
-    }catch(err){
-        console.log('error encrypting password')
-        next(returnError())
-    }
-});
+// userSchema.pre('save', async function(next){
+//     console.log('entered mongoose middleware to encrypt password',this.password)
+// });
 
 
 const User = mongoose.model('User', userSchema);

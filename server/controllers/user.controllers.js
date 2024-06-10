@@ -1,6 +1,8 @@
 import User from '../models/user.model.js'
 import mongoose from "mongoose"
 import { returnError } from '../utils/error.js'
+import Product from '../models/product.model.js'
+import Like from '../models/likes.model.js'
 
 export const getAllUsers = async (req, res, next) => {
     if (req.role === 'user') return next(returnError(401, 'Unauthorized user'))
@@ -69,32 +71,132 @@ export const updateUser = async(req, res, next) => {
     }
 }
 
-export const getCartDetails = async(req, res, next) =>{
+export const addToCart = async (req, res, next) => {
+    try {
+        const userId = req.user.id; 
+        const { productId, quantity } = req.body;
+
+        if (!productId || !quantity || quantity < 1) {
+            return res.status(400).json({ error: "Invalid product ID or quantity" });
+        }
+
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ error: "Product not found" });
+        }
+
+        const price = product.price; 
+
+        const user = await User.findById(userId);
+
+        const existingProductIndex = user.cart.findIndex(item => item.productId.toString() === productId);
+
+        if (existingProductIndex > -1) {
+            user.cart[existingProductIndex].quantity += quantity;
+        } else {
+            user.cart.push({ productId, quantity, price });
+        }
+
+        await user.save();
+
+        res.status(200).json({ message: "Product added to cart", cart: user.cart });
+    } catch (err) {
+        console.error("Error adding to cart:", err); 
+        next(returnError(err));
+    }
+};
+
+export const getCartDetails = async (req, res, next) => {
+    try {
+        const userId = req.user.id; // Authenticated user ID from the middleware
+
+        // Find the user and populate the cart product details
+        const user = await User.findById(userId).populate('cart.productId', 'name price thumb_img');
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({ cart: user.cart });
+    } catch (err) {
+        console.error("Error getting cart details:", err);
+        next(returnError(err));
+    }
+};
+
+export const editCart = async (req, res, next) => {
+    try {
+        const userId = req.user.id; 
+        const { productId, quantity } = req.body;
+
+        if (!productId || quantity === undefined) {
+            return res.status(400).json({ error: "Invalid product ID or quantity" });
+        }
+
+        const user = await User.findById(userId);
+
+        const productIndex = user.cart.findIndex(item => item.productId.toString() === productId);
+
+        if (productIndex === -1) {
+            return res.status(404).json({ error: "Product not found in cart" });
+        }
+
+        if (quantity === 0) {
+            user.cart.splice(productIndex, 1);
+        } else {
+            user.cart[productIndex].quantity = quantity;
+        }
+
+        await user.save();
+
+        res.status(200).json({ message: "Cart updated successfully", cart: user.cart });
+    } catch (err) {
+        console.error("Error updating cart:", err);
+        next(returnError(err));
+    }
+};
+
+export const deleteCartProduct = async (req,res,next)=>{
     try{
-        const user = await User.findById(req.user.id)
-        const cartDetails = user.cart
-        res.status(200).json({
-            success: true,
-            data: cartDetails
-        })
+        const userId = req.user.id; 
+        const { productId, quantity } = req.body;
+
+        if (!productId || quantity === undefined) {
+            return res.status(400).json({ error: "Invalid product ID or quantity" });
+        }
+
+        const user = await User.findById(userId);
+
+        const productIndex = user.cart.findIndex(item => item.productId.toString() === productId);
+
+        if (productIndex === -1) {
+            return res.status(404).json({ error: "Product not found in cart" });
+        }
+
+        user.cart.splice(productIndex, 1);
+         
+        user.save()
     }catch(err){
-        next(err)
+        console.error("Error deleting cart:", err);
+        next(returnError(err));
     }
 }
 
-// export const addToCart = async(req, res, next) =>{
-//     try{
-//         const user = await User.findByIdAndUpdate({_id: req.user.id},{
-//             $push: {cart: {
-//                 productId: req.params.id,
-//                 quantity: 1
-//             }}   
-//         },{new : true})
-//         res.status(201).json({
-//             success:true,
-//             message:'product added to cart'
-//         })
-//     }catch(err){
-//         next(err)
-//     }
-// }
+export const getWishlist = async (req, res, next) => {
+    try {
+        const userId = req.user.id; 
+
+        const likedProducts = await Like.find({ userId }).populate('productId');
+
+        const productIds = likedProducts.map(like => like.productId);
+
+        const productsDetails = await Product.find({ _id: { $in: productIds } });
+
+        res.status(200).json({ data: productsDetails });
+    } catch (err) {
+        console.error("Error fetching liked products:", err);
+        next(returnError(err));
+    }
+};
+
