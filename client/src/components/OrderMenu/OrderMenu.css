@@ -1,0 +1,27 @@
+.order-menu{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 340px;
+    border-right: 0.7px solid rgb(226, 222, 222);
+}
+.order-menu-top{
+    padding-top:40px;
+    padding-left: 10px;
+    border-bottom: 0.7px solid rgb(226, 222, 222);
+}
+.order-menu-top img{
+    width:306px;
+    height:85px;
+}
+.order-menu-bottom{
+    padding-top: 40px;
+    padding-left: 80px;
+}
+.order-menu-heading{
+    font-size: 20px;
+    font-weight: 600;
+    font-family: Montserrat;
+    line-height: 24.38px;
+    color: rgba(0, 0, 0, 1);
+}

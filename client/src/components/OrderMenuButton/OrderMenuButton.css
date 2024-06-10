@@ -1,0 +1,28 @@
+.order-menu-buttons{
+    display: flex;
+    flex-direction: column;
+    gap:15px;
+    position: relative;
+    top: 30px;
+}
+.order-menu-p {
+    display: inline-block; 
+    padding: 10px 20px; 
+    border-radius: 15px;
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: -1px 4px 6.5px 0px rgba(189, 189, 189, 0.35);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.5; 
+    color: rgba(0, 0, 0, 1);
+    text-align: center;
+    cursor: pointer;
+    margin: 10px;
+    position: relative;
+    left:-15px;
+}
+.order-menu-p.clicked{
+    background-color: orange;
+    color:white;
+}
