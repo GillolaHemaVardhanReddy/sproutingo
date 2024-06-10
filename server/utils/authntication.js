@@ -4,9 +4,17 @@ import { returnError } from './error.js'
 
 export const Authentication = async (req,res,next)=>{
     const token = req.signedCookies.auth
+    if(!token){
+        return next(returnError(401, 'No authentication token provided'));
+    }
     try{
-        const resp = jwt.verify(token,process.env.JWT_SECRET)
-        const user = await User.findOne({_id:resp.id})
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id);
+
+        if (!user) {
+            return next(returnError(404, 'User not found'));
+        }
+        
         req.user = {id:user.id};
         req.role = user.role
         next()

@@ -13,10 +13,17 @@ export const signup = async (req,res,next)=>{ // body is email,name,password
         console.log('signup controller')
         const isUser = await User.findOne({email:req.body.email})
         if(isUser) return next(returnError(409,'user already exist'))
-        const newUser = User(req.body)
-        await newUser.save()
-        const {password , ...remain} = newUser.toObject();
-        res.status(201).json(remain)
+        try{
+            const salt = await bcrypt.genSalt();
+            req.body.password = await bcrypt.hash(req.body.password,salt);
+            const newUser = User(req.body)
+            await newUser.save()
+            const {password , ...remain} = newUser.toObject();
+            res.status(201).json(remain)
+        }catch(err){
+            console.log('error encrypting password')
+            next(err)
+        }
     }catch(err){
         if (err instanceof mongoose.CastError) return next(returnError(400, 'enter valid details to update'));
         if (err.name === 'ValidationError') return next(returnError(400, 'Validation Error'));
