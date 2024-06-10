@@ -9,7 +9,10 @@ export const create = async (req,res,next)=>{
     try{
         const newProduct = Product(req.body)
         await newProduct.save()
-        res.status(201).json(newProduct)
+        res.status(201).json({
+            success: true,
+            data:newProduct
+        })
     }catch(err){
         next(err)
     }
@@ -21,7 +24,7 @@ export const getProductById = async (req,res,next)=>{
             return next( returnError(400,'Invalid product id'));
         const product = await Product.findById(req.params.id)
         if(!product) return next(returnError(404,'product not found'))
-        res.status(200).json(product)
+        res.status(200).json({success:true,data:product})
     }catch(err){
         next(err)
     }
@@ -35,7 +38,7 @@ export const deleteProduct = async (req,res,next)=>{
         const product = await Product.findById(req.params.id)
         if(!product) return next(returnError(404,'product not found'))
         await Product.findOneAndDelete({_id:req.params.id})
-        res.status(200).json('product successfully deleted')
+        res.status(200).json({success:true,data:'product successfully deleted'})
     }catch(err){
         next(err)
     }
@@ -52,7 +55,7 @@ export const update = async (req,res,next)=>{
         const updatedProduct = await Product.findByIdAndUpdate({_id:req.params.id},{
             $set: req.body
         },{new:true})
-        res.status(200).json(updatedProduct)
+        res.status(200).json({success:true,data:updatedProduct})
     }catch(err){
         if (err instanceof mongoose.CastError) return next(returnError(400, 'enter valid details to update'));
         next(err)
@@ -78,11 +81,15 @@ export const like = async (req,res,next)=>{
             const updatedProduct = await Like.findByIdAndUpdate({_id:likedProduct._id},{
                 $set: {like:true,unlike:false}
             },{new:true})
-            res.status(200).json(updatedProduct)
+            res.status(200).json({success:true,data:updatedProduct})
         }else{
             const newLike = Like({userId:req.user.id,productId:req.params.id,like:true,unlike:false})
-            await newLike.save()
-            return res.status(201).json({message:'liked successfully',newLike})
+            await newLike.save() 
+            return res.status(201).json({
+                success:true,
+                message:'liked successfully',
+                data:newLike
+            })
         }
     }catch(err){
         next(err)
@@ -108,11 +115,15 @@ export const dislike = async (req,res,next)=>{
             const updatedProduct = await Like.findByIdAndUpdate({_id:likedProduct._id},{
                 $set: {like:false,unlike:true}
             },{new:true})
-            res.status(200).json(updatedProduct)
+            res.status(200).json({success:true,data:updatedProduct})
         }else{
             const newLike = Like({userId:req.user.id,productId:req.params.id,like:false,unlike:true})
             await newLike.save()
-            return res.status(201).json({message:'unliked successfully',newLike})
+            return res.status(201).json({
+                success:true,
+                message:'unliked successfully',
+                data:newLike
+            })
         }
     }catch(err){
         next(err)
@@ -131,7 +142,10 @@ export const random = async (req,res,next)=>{
             }
         }else{
             finalList = await getFilteredProduct();
-            return res.status(200).json(finalList);
+            return res.status(200).json({
+                success:true,
+                data:finalList
+            });
         }
     }catch(err){
         next(err)
@@ -143,7 +157,10 @@ export const getByTag = async (req,res,next)=>{
     const tags = req.query.tags.split(",")
     try{
         const finalResp = await getProductByTag(tags);
-        res.status(200).json(finalResp)
+        res.status(200).json({
+            success:true,
+            data:finalResp
+        })
     }catch(err){    
         next(err)
     }
@@ -156,7 +173,10 @@ export const search = async (req,res,next)=>{
             return  res.json('no product found').status(200)
         }
         const finalResp = await searchProduct(query);
-        res.status(200).json(finalResp)
+        res.status(200).json({
+            success:true,
+            data:finalResp
+        })
     }catch(err){
         next(err)
     }   

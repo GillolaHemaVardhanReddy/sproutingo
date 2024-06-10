@@ -8,7 +8,7 @@ export const getAllUsers = async (req, res, next) => {
     if (req.role === 'user') return next(returnError(401, 'Unauthorized user'))
     try {
         const users = await User.find()
-        res.status(200).json(users)
+        res.status(200).json({success:true,data:users})
     } catch (err) {
         next(err)
     }
@@ -83,7 +83,7 @@ export const addToCart = async (req, res, next) => {
         const product = await Product.findById(productId);
 
         if (!product) {
-            return res.status(404).json({ error: "Product not found" });
+            return res.status(404).json({ success:false, error: "Product not found" });
         }
 
         const price = product.price; 
@@ -100,7 +100,7 @@ export const addToCart = async (req, res, next) => {
 
         await user.save();
 
-        res.status(200).json({ message: "Product added to cart", cart: user.cart });
+        res.status(200).json({success:true, message: "Product added to cart", data: user.cart });
     } catch (err) {
         console.error("Error adding to cart:", err); 
         next(returnError(err));
@@ -115,10 +115,10 @@ export const getCartDetails = async (req, res, next) => {
         const user = await User.findById(userId).populate('cart.productId', 'name price thumb_img');
 
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return next(returnError(404,'user not found'))
         }
 
-        res.status(200).json({ cart: user.cart });
+        res.status(200).json({success:true, data: user.cart });
     } catch (err) {
         console.error("Error getting cart details:", err);
         next(returnError(err));
@@ -131,7 +131,7 @@ export const editCart = async (req, res, next) => {
         const { productId, quantity } = req.body;
 
         if (!productId || quantity === undefined) {
-            return res.status(400).json({ error: "Invalid product ID or quantity" });
+            return next(returnError(400,"Invalid product ID or quantity"))
         }
 
         const user = await User.findById(userId);
@@ -139,7 +139,7 @@ export const editCart = async (req, res, next) => {
         const productIndex = user.cart.findIndex(item => item.productId.toString() === productId);
 
         if (productIndex === -1) {
-            return res.status(404).json({ error: "Product not found in cart" });
+            return next(returnError(400,"Product not found in cart"))
         }
 
         if (quantity === 0) {
@@ -150,7 +150,7 @@ export const editCart = async (req, res, next) => {
 
         await user.save();
 
-        res.status(200).json({ message: "Cart updated successfully", cart: user.cart });
+        res.status(200).json({ success:true, message: "Cart updated successfully", data: user.cart });
     } catch (err) {
         console.error("Error updating cart:", err);
         next(returnError(err));
@@ -163,7 +163,7 @@ export const deleteCartProduct = async (req,res,next)=>{
         const { productId, quantity } = req.body;
 
         if (!productId || quantity === undefined) {
-            return res.status(400).json({ error: "Invalid product ID or quantity" });
+            return next(returnError(400,"Invalid product ID or quantity"))
         }
 
         const user = await User.findById(userId);
@@ -171,12 +171,13 @@ export const deleteCartProduct = async (req,res,next)=>{
         const productIndex = user.cart.findIndex(item => item.productId.toString() === productId);
 
         if (productIndex === -1) {
-            return res.status(404).json({ error: "Product not found in cart" });
+            return next(returnError(400,"Product not found in cart"))
         }
 
         user.cart.splice(productIndex, 1);
          
-        user.save()
+        await user.save()
+        res.status(200).json({success:true,message:"successfullt deleted"})
     }catch(err){
         console.error("Error deleting cart:", err);
         next(returnError(err));
@@ -189,11 +190,15 @@ export const getWishlist = async (req, res, next) => {
 
         const likedProducts = await Like.find({ userId }).populate('productId');
 
+        if(!likedProducts){
+            return next(returnError(404,"no products found in wishlist"))
+        }
+        
         const productIds = likedProducts.map(like => like.productId);
 
         const productsDetails = await Product.find({ _id: { $in: productIds } });
 
-        res.status(200).json({ data: productsDetails });
+        res.status(200).json({success:true, data: productsDetails });
     } catch (err) {
         console.error("Error fetching liked products:", err);
         next(returnError(err));

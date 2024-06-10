@@ -71,7 +71,10 @@ export const getNotDeliveredOrdersByDate =  async (req,res,next)=> {
                 $lt:nextDate
             }
         }); 
-        res.status(200).json(totalOrdersNotDelivered);
+        res.status(200).json({
+            success:true,
+            data:totalOrdersNotDelivered
+        });
     }
     catch(err){
         next(err);
@@ -91,7 +94,10 @@ export const getDeliveredOrdersByDate =  async (req,res,next)=> {
                 $lt:nextDate
             }
         }); 
-        res.status(200).json(totalOrdersDelivered);
+        res.status(200).json({
+            success:true,
+            data:totalOrdersDelivered
+        });
     }
     catch(err){
         next(err);
@@ -120,7 +126,10 @@ export const getDeliveredOrdersByProductName = async (req,res,next) => {
             },
             isDelivered:true
         });
-        res.status(200).json(totalDeliveredOrdersByProductName);
+        res.status(200).json({
+            success:true,
+            data:totalDeliveredOrdersByProductName
+        });
     } catch(err){
         next(err);
     }
@@ -149,7 +158,10 @@ export const getNotDeliveredOrdersByProductName = async (req,res,next) => {
             },
             isDelivered:false
         });
-        res.status(200).json(totalNotDeliveredOrdersByProductName);
+        res.status(200).json({
+            success:true,
+            data:totalNotDeliveredOrdersByProductName
+        });
     } catch(err){
         next(err);
     }
@@ -157,9 +169,14 @@ export const getNotDeliveredOrdersByProductName = async (req,res,next) => {
 
 export const getDeliveredOrdersByUserId = async (req,res,next) =>{
     try{
-    const deliveredOrders = await  orders.find({userId: req.user.id,
-        isDelivered:true});
-    res.status(200).json(deliveredOrders);
+    const deliveredOrders = await  orders.find({
+        userId: req.user.id,
+        isDelivered:true
+    });
+    res.status(200).json({
+        success:true,
+        data:deliveredOrders
+    });
     } catch(err){
         next(err);
     }
@@ -169,7 +186,10 @@ export const getNotDeliveredOrdersByUserId = async (req,res,next) =>{
     try{
     const notDeliveredOrders = await  orders.find({userId: req.user.id,
         isDelivered:false});
-    res.status(200).json(notDeliveredOrders);
+    res.status(200).json({
+        success:true,
+        data:notDeliveredOrders
+    });
     } catch(err){
         next(err);
     }
@@ -186,7 +206,10 @@ export const deleteOrder = async (req,res,next) => {
             delorder.reqDelete = true;
             delorder.save()
         } 
-        res.status(200).json(msg);
+        res.status(200).json({
+            success:true,
+            data:msg
+        });
     } catch(err){
         next(err);
     }
@@ -199,7 +222,10 @@ export const getOrdersByOrderId = async (req,res,next) => {
             return next( returnError(400,'Invalid order id'));
         const orderDetails = await orders.findById(req.params.id)
         if(!orderDetails) return next(returnError(404,'order not found'))
-        res.status(200).json(orderDetails)
+        res.status(200).json({
+            success:true,
+            data:orderDetails
+        })
     } catch(err){
         next(err);
     }
@@ -210,14 +236,7 @@ export const updateDetails = async (req,res,next) => {
     try{
         if (!mongoose.isValidObjectId(req.body.id)) 
             return next( returnError(400,'Invalid order id'));
-        const r = await orders.findById(req.body.id)
-        if(!r) return next(returnError(404,'order not found'))
-        if(req.body.deliveredDate)
-        r.deliveredDate = req.body.deliveredDate;
-    if(req.body.isDelivered)
-        r.isDelivered = req.body.isDelivered;
-    if(req.body.msg)
-        r.msg = req.body.msg;
+        
     } catch(err) {
         next(err);
     }

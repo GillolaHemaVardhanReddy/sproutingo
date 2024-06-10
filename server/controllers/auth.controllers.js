@@ -19,7 +19,10 @@ export const signup = async (req,res,next)=>{ // body is email,name,password
             const newUser = User(req.body)
             await newUser.save()
             const {password , ...remain} = newUser.toObject();
-            res.status(201).json(remain)
+            res.status(201).json({
+                success:true,
+                data:remain
+            })
         }catch(err){
             console.log('error encrypting password')
             next(err)
@@ -61,7 +64,10 @@ export const signout = async (req,res,next)=>{
     console.log('signout controller')
     try{
         res.clearCookie('auth', { maxAge: 0 })
-        res.status(200).json('logged out successfully')
+        res.status(200).json({
+            success: true,
+            data:'logged out successfully'
+        })
     }catch(err){
         next(err)
     }
@@ -91,7 +97,6 @@ export const signupmail = async (req,res,next)=>{
             `
         }
         await sgMail.send(emailData)
-        console.log('signup email sent successful')
         res.status(200).json({
             success: true, message: `Email has been sent to ${email} .Follow the instruction to activate your account`
         })
