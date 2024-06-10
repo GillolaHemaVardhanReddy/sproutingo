@@ -1,7 +1,6 @@
 import express from "express";
-import {getAllUsers, getUserById, getUserDetails, deleteUserAccount, updateUser, getCartDetails, addToCart, getWishlist} from '../controllers/user.controllers.js'
+import {getAllUsers, getUserById, getUserDetails, deleteUserAccount, updateUser, getCartDetails} from '../controllers/user.controllers.js'
 import { Authentication } from "../utils/authntication.js";
-import { UpdateRules, validateUpdate } from "../validators/update.validate.js";
 
 const router = express.Router()
 
@@ -29,7 +28,6 @@ router.put('/' , Authentication, updateUser)
 // delete from cart (authenticated user)
 
 //wishlist (authenticated user)
-router.get('/wishlist',Authentication, getWishlist)
 
 
 export default router

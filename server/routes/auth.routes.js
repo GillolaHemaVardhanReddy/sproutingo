@@ -5,7 +5,7 @@ import { signinRules, signupRules, validate } from "../validators/auth.validator
 const router = express.Router()
 
 // signup user and send otp to email
-router.post('/signup', signupRules , validate , signupmail)
+router.post('/signup', signupRules , validate , signup)
 
 // activate user
 router.post('/activate-account' , Activate)

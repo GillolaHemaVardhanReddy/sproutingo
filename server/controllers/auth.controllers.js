@@ -6,7 +6,7 @@ import dotenv from 'dotenv'
 import mongoose from "mongoose"
 import sgMail from '@sendgrid/mail'
 dotenv.config()
-sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
+// sgMail.setApiKey(process.env.SEND_GRID_API_KEY)
 
 export const signup = async (req,res,next)=>{ // body is email,name,password
     try{
