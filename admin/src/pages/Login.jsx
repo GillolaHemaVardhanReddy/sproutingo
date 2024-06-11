@@ -25,11 +25,15 @@ const Login = () => {
       setError('');
       try {
         const resp = await axios.post('/auth/signin', { email, password });
-        if (resp.data.success) {
-            navigate('/admin/'); // Use history.push for redirection
+        console.log(resp.data.data.role)
+        if (resp.data.success && resp.data.data.role==='admin') {
+          localStorage.setItem('isAuth', 'true'); 
+          navigate('/admin/manage'); 
+        } else {
+          setError('Invalid login credentials Only admins are allowed');
         }
       } catch (err) {
-        setError('Error logging in. Please try again.'); // Handle error responses from the server
+        setError('Error logging in. Please try again.');
       }
     }
   };

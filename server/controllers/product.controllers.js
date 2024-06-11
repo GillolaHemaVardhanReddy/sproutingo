@@ -14,7 +14,7 @@ export const create = async (req,res,next)=>{
             data:newProduct
         })
     }catch(err){
-        console.error("Error create product controller");
+        console.error("Error create product controller:",err.message);
         next(err)
     }
 }
