@@ -1,11 +1,11 @@
 import React from 'react'
-import ProductNavbar from '../components/ProductNavbar/ProductNavbar'
 import './css/Products.css'
+import ProductDisplay from '../components/ProductDisplay/ProductDisplay'
 
 const Products = () => {
   return (
     <div className='products-container'>
-      <ProductNavbar/>
+      <ProductDisplay/>
     </div>
   )
 }
