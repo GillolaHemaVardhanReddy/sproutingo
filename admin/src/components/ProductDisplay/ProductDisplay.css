@@ -1,0 +1,57 @@
+.product-card {
+    padding: 16px;
+    margin: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.product-table th, .product-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.product-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.product-image {
+    width: 100px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.product-table .edit-btn, .product-table .delete-btn {
+    padding: 8px 12px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.product-table .edit-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.product-table .edit-btn:hover {
+    background-color: #0056b3;
+}
+
+.product-table .delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.product-table .delete-btn:hover {
+    background-color: #c82333;
+}
