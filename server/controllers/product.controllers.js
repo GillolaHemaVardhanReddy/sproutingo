@@ -14,6 +14,7 @@ export const create = async (req,res,next)=>{
             data:newProduct
         })
     }catch(err){
+        console.error("Error create product controller");
         next(err)
     }
 }
@@ -24,6 +25,7 @@ export const getProductById = async (req,res,next)=>{
         const product = await checkProductExist(req.params.id)
         res.status(200).json({success:true,data:product})
     }catch(err){
+        console.error("Error get product by id controller");
         next(err)
     }
 }
@@ -37,6 +39,7 @@ export const deleteProduct = async (req,res,next)=>{
         await Product.findOneAndDelete({_id:req.params.id})
         res.status(200).json({success:true,data:'product successfully deleted'})
     }catch(err){
+        console.error("Error delete product controller");
         next(err)
     }
 }
@@ -53,6 +56,7 @@ export const update = async (req,res,next)=>{
         },{new:true})
         res.status(200).json({success:true,data:updatedProduct})
     }catch(err){
+        console.error("Error update product controller");
         if (err instanceof mongoose.CastError) return next(returnError(400, 'enter valid details to update'));
         next(err)
     }
@@ -88,6 +92,7 @@ export const like = async (req,res,next)=>{
             })
         }
     }catch(err){
+        console.error("Error like product controller");
         next(err)
     }
 }
@@ -122,6 +127,7 @@ export const dislike = async (req,res,next)=>{
             })
         }
     }catch(err){
+        console.error("Error unlike product controller");
         next(err)
     }
 }
@@ -140,6 +146,7 @@ export const random = async (req,res,next)=>{
             });
         }
     }catch(err){
+        console.error("Error get random products controller");
         next(err)
     }
 }
@@ -154,6 +161,7 @@ export const getByTag = async (req,res,next)=>{
             data:finalResp
         })
     }catch(err){    
+        console.error("Error get by tag product controller");
         next(err)
     }
 }
@@ -170,6 +178,7 @@ export const search = async (req,res,next)=>{
             data:finalResp
         })
     }catch(err){
+        console.error("Error product search controller");
         next(err)
     }   
 }
