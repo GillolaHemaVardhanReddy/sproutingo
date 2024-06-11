@@ -6,6 +6,7 @@ import productRoutes from './routes/product.routes.js'
 import cookieParser from "cookie-parser";
 import userRoutes from './routes/user.routes.js'
 import orderRoutes from "./routes/orders.routes.js"
+import cors from 'cors'
 
 dotenv.config()
 
@@ -20,12 +21,16 @@ app.listen(port,()=>{
 // app middleware
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(express.json())
+app.use(cors({
+    origin: "*",
+    credentials: true,
+}))
 
 // routes middleware
 app.use('/api/auth',authRoutes)
 app.use('/api/product',productRoutes)
 app.use('/api/user',userRoutes)
-app.use('/api/order',orderRoutes);
+app.use('/api/order',orderRoutes)
 
 // error handler middleware
 app.use((err,req,res,next)=>{
