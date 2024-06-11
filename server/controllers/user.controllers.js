@@ -10,6 +10,7 @@ export const getAllUsers = async (req, res, next) => {
         const users = await User.find()
         res.status(200).json({success:true,data:users})
     } catch (err) {
+        console.error("Error in get all users controller");
         next(err)
     }
 }
@@ -26,6 +27,7 @@ export const getUserById = async (req, res, next) => {
             data: user
         })
     } catch (err) {
+        console.error("Error in get user by id controller");
         next(err)
     }
 }
@@ -38,6 +40,7 @@ export const getUserDetails = async (req, res, next) => {
             data: user
         }) 
     }catch(err){
+        console.error("Error get user details controller");
         next(err)
     }
 }
@@ -52,6 +55,7 @@ export const deleteUserAccount = async(req,res, next) =>{
             message: 'Account deleted successfully'
         })
     }catch(err){
+        console.error("Error delete user controller");
         next(err)
     }
 }
@@ -67,6 +71,7 @@ export const updateUser = async(req, res, next) => {
             data: updatedUser
         })
     }catch(err){
+        console.error("Error updating user controller");
         next(err)
     }
 }
@@ -102,7 +107,7 @@ export const addToCart = async (req, res, next) => {
 
         res.status(200).json({success:true, message: "Product added to cart", data: user.cart });
     } catch (err) {
-        console.error("Error adding to cart:", err); 
+        console.error("Error add to cart controller");
         next(returnError(err));
     }
 };
@@ -120,7 +125,7 @@ export const getCartDetails = async (req, res, next) => {
 
         res.status(200).json({success:true, data: user.cart });
     } catch (err) {
-        console.error("Error getting cart details:", err);
+        console.error("Error get cart controller");
         next(returnError(err));
     }
 };
@@ -152,7 +157,7 @@ export const editCart = async (req, res, next) => {
 
         res.status(200).json({ success:true, message: "Cart updated successfully", data: user.cart });
     } catch (err) {
-        console.error("Error updating cart:", err);
+        console.error("Error edit cart controller");
         next(returnError(err));
     }
 };
@@ -179,7 +184,7 @@ export const deleteCartProduct = async (req,res,next)=>{
         await user.save()
         res.status(200).json({success:true,message:"successfullt deleted"})
     }catch(err){
-        console.error("Error deleting cart:", err);
+        console.error("Error delet cart controller");
         next(returnError(err));
     }
 }
@@ -200,7 +205,7 @@ export const getWishlist = async (req, res, next) => {
 
         res.status(200).json({success:true, data: productsDetails });
     } catch (err) {
-        console.error("Error fetching liked products:", err);
+        console.error("Error get list controller");
         next(returnError(err));
     }
 };
