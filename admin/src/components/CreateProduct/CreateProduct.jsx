@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import './CreateProduct.css'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 
 const CreateProduct = () => {
-
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
       name: '',
       available: true,
@@ -31,7 +32,9 @@ const CreateProduct = () => {
         const resp = await axios.post('/product/',formData,{
           withCredentials:true
         })
-        console.log(resp)
+        if(resp.data.success){
+            navigate('/admin/products')
+        }
       }catch(err){
         console.log(err.message)
       }
