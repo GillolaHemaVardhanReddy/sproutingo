@@ -7,6 +7,7 @@ import ProductLayout from './layouts/ProductLayout';
 import CreateProduct from './components/CreateProduct/CreateProduct';
 import Login from './pages/Login';
 import AuthLayout from './layouts/AuthLayout';
+
 const SiteRouter = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<RootLayout/>}>

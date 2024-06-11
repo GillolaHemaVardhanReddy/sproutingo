@@ -55,3 +55,13 @@
 .product-table .delete-btn:hover {
     background-color: #c82333;
 }
+
+.product-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+td > input{
+    width: 60px;
+}
