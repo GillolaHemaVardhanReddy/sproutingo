@@ -21,10 +21,6 @@ app.listen(port,()=>{
 // app middleware
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(express.json())
-app.use(cors({
-    origin: "*",
-    credentials: true,
-}))
 
 // routes middleware
 app.use('/api/auth',authRoutes)

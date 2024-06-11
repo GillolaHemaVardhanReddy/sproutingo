@@ -5,6 +5,9 @@ import HomeLayout from './layouts/HomeLayout';
 import Products from './pages/Products';
 import ProductLayout from './layouts/ProductLayout';
 import CreateProduct from './components/CreateProduct/CreateProduct';
+import Login from './pages/Login';
+import AuthLayout from './layouts/AuthLayout';
+
 const SiteRouter = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<RootLayout/>}>
@@ -14,10 +17,9 @@ const SiteRouter = createBrowserRouter(
             <Route path='create' element={<CreateProduct/>}/>
         </Route>
       </Route>
-      <Route path='auth'>
-        
+      <Route path='admin-auth' element={<AuthLayout/>}>
+        <Route path='login' element={<Login/>}/>
       </Route>
-      <Route />
     </Route>
   )
 )
