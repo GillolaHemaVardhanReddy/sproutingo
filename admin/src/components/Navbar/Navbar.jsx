@@ -9,7 +9,8 @@ const Navbar = () => {
             <img src={nav_log} alt='' className='nav-logo'/>
         </div>
         <div className='nav-right'>
-            
+            <p className='nav-btn'>Home</p>
+            <p className='nav-btn'>Logout</p>
         </div>
     </div>
   )

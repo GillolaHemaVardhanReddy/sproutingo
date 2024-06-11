@@ -2,11 +2,12 @@ import { Route, RouterProvider, createBrowserRouter, createRoutesFromElements } 
 import './App.css';
 import RootLayout from './layouts/RootLayout';
 import HomeLayout from './layouts/HomeLayout';
+import Products from './pages/Products';
 const SiteRouter = createBrowserRouter(
   createRoutesFromElements(
-    <Route path='/admin' element={<RootLayout/>}>
-      <Route path='home' element={<HomeLayout/>}>
-        
+    <Route path='/' element={<RootLayout/>}>
+      <Route path='admin' element={<HomeLayout/>}>
+        <Route path='products' element={<Products/>}/>
       </Route>
       <Route path='auth'>
         
