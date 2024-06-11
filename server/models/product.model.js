@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema({
     },
     thumb_img: {
         type: String,
-        // required: true,
+        required: true,
     },
     imgUrls: {
         type: [String],

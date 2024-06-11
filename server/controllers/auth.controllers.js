@@ -29,7 +29,7 @@ export const signin = async (req,res,next)=>{
     try{
         const user = await checkForUserSignin(req.body.email)
         await checkPassword(req.body.password,user.password)
-        const token = jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'10d'}) // expires in 2days
+        const token = jwt.sign({id:user._id,email:user.email},process.env.JWT_SECRET,{expiresIn:'10d'}) // expires in 2days
         const {password , ...remain} = user.toObject();
         res.cookie('auth',token, {
              maxAge:2 * 24 * 60 * 60 * 1000,
