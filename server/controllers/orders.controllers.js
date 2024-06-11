@@ -3,32 +3,18 @@ import orders from "../models/orders.model.js";
 import Product from "../models/product.model.js";
 import { returnError } from "../utils/error.js"
 import User from "../models/user.model.js";
+import { checkUser, createOrderAndSetCartToEmpty } from "../db/orders.db.js";
 
 export const createOrder = async (req, res, next) => { // todo validate order input
     try {
-        const user = await User.findById(req.user.id);
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+        const user = await checkUser(req.user.id);
 
-        if(user.cart.length<=0) return next(returnError(409,'Cart is empty add products to checkout'))
         const new_order = {
             userId: user._id,
             products: user.cart,
         };
 
-        const newOrder = new orders(new_order);
-
-        const updatedUser = await User.findByIdAndUpdate(
-            req.user.id,
-            { $set: { cart: [] } },
-            { new: true }
-        );
-        if (!updatedUser) {
-            return res.status(404).json({ error: 'Failed to update user cart' });
-        }
-
-        await newOrder.save();
+        const newOrder = await createOrderAndSetCartToEmpty(req.user.id,new_order)
 
         res.status(201).json(newOrder);
     } catch (err) {

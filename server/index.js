@@ -25,7 +25,7 @@ app.use(express.json())
 app.use('/api/auth',authRoutes)
 app.use('/api/product',productRoutes)
 app.use('/api/user',userRoutes)
-app.use('/api/orders',orderRoutes);
+app.use('/api/order',orderRoutes);
 
 // error handler middleware
 app.use((err,req,res,next)=>{

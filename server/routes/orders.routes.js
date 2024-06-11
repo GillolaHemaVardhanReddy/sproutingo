@@ -17,9 +17,6 @@ import {
  from "./../controllers/orders.controllers.js"
 const router = express.Router()
 
-// create a order (authenticated and for user,admin)
-router.post('/createorder',Authentication,createOrder)
-
 //get totalordersdelivered till now (authenticated only for admin)
 router.get('/all/delivered',Authentication,getTotalOrdersDelivered)
 
@@ -40,6 +37,9 @@ router.get('/:id',Authentication,getOrdersByOrderId);
 
 //update order details by admin(authenticated)
 router.put('/:id',Authentication,updateDetails);
+
+// create a order (authenticated and for user,admin)
+router.post('/',Authentication,createOrder)
 
 // //get delivered orders by date(2024-01-01 datewise) (authenticated only for admin)
 // router.get('/deliveredordersbydate',Authentication,getDeliveredOrdersByDate)
