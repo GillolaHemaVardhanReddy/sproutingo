@@ -12,7 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = (e) => { 
     setEmail(e.target.value);
   };
 

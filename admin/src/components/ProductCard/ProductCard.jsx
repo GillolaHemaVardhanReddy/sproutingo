@@ -54,14 +54,18 @@ const ProductCard = ({ name, desc, disc, price, cat, dis_price, tags, image, ava
   
     const handleDelete = async () => {
       try {
-        const resp = await axios.delete(`/product/${id}`);
-        if (resp.data.success) {
-          refresh();
+        const userConfirmed = window.confirm("Are you sure you want to delete this product?");
+        if (userConfirmed) {
+          const resp = await axios.delete(`/product/${id}`);
+          if (resp.data.success) {
+            refresh();
+          }
         }
       } catch (err) {
         console.log(err.message);
       }
     };
+    
   
     return (
       <tr className='individual-product'>
