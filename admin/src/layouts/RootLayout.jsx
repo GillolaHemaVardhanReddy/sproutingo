@@ -22,14 +22,3 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
-
-
-{/* <Route path='admin' element={<HomeLayout/>}>
-          <Route path='products' element={<ProductLayout/>}>
-              <Route index element={<Products/>}/>
-              <Route path='create' element={<CreateProduct/>}/>
-          </Route>
-          </Route>
-          <Route path='admin-auth' element={<AuthLayout/>}>
-            <Route path='login' element={<Login/>}/>
-          </Route> */}
