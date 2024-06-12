@@ -2,6 +2,7 @@ import {check, validationResult} from 'express-validator'
 import { returnError } from '../utils/error.js';
 export const signupRules = [
     check('email','enter a valid email').isEmail().notEmpty(),
+    check('phone','enter a valid phone number').notEmpty().isLength({ min:10, max:10 }),
     check('name', 'Name is required').notEmpty(),
     check('password', 'Password must be at least 6 characters long').isLength({ min: 6 }).notEmpty()
 ]
