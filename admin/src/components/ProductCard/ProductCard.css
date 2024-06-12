@@ -1,0 +1,29 @@
+.product-image {
+    width: 100px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.product-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-table .edit-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.product-table .edit-btn:hover {
+    background-color: #0056b3;
+}
+
+.product-table .delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.product-table .delete-btn:hover {
+    background-color: #c82333;
+}

@@ -15,14 +15,22 @@ const CreateProduct = () => {
     dis_price: '',
     desc: '',
     category: 'dryfruits',
-    tags: ''
+    tags: []
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadError, setUploadError] = useState('');
 
   const handleChange = async (e) => {
     const { name, value, type, files } = e.target;
     if (type === 'file' && files.length > 0) {
-      const uploadPhoto = await uploadFile(files[0]);
-      setFormData(prevFormData => ({ ...prevFormData, [name]: uploadPhoto.url }));
+      try {
+        const uploadPhoto = await uploadFile(files[0]);
+        setFormData(prevFormData => ({ ...prevFormData, [name]: uploadPhoto.url }));
+      } catch (error) {
+        setUploadError('File upload failed. Please try again.');
+      }
+    } else if (name === 'tags') {
+      setFormData(prev => ({ ...prev, [name]: value.split(',') }));
     } else {
       setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
     }
@@ -30,6 +38,7 @@ const CreateProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const discountedPrice = formData.price - (formData.price * (formData.discount / 100));
       const updatedFormData = { ...formData, dis_price: discountedPrice };
@@ -37,16 +46,18 @@ const CreateProduct = () => {
         withCredentials: true
       });
       if (resp.data.success) {
-        navigate('/admin/products');
+        navigate('/admin/manage/products');
       }
     } catch (err) {
       console.log(err.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const goBack = ()=>{
-    navigate(-1)
-  }
+  const goBack = () => {
+    navigate(-1);
+  };
 
   return (
     <div className='product-create-container'>
@@ -57,7 +68,7 @@ const CreateProduct = () => {
         </div>
         <div>
           <label htmlFor='available'>Availability</label>
-          <select name='available' onChange={handleChange}>
+          <select name='available' onChange={handleChange} value={formData.available}>
             <option value={true}>Yes</option>
             <option value={false}>No</option>
           </select>
@@ -73,6 +84,7 @@ const CreateProduct = () => {
         <div>
           <label htmlFor='thumb_img'>Image</label>
           <input type='file' name='thumb_img' onChange={handleChange} />
+          {uploadError && <p className="error">{uploadError}</p>}
         </div>
         <div>
           <label htmlFor='desc'>Description</label>
@@ -80,7 +92,7 @@ const CreateProduct = () => {
         </div>
         <div>
           <label htmlFor='category'>Type</label>
-          <select name='category' required onChange={handleChange}>
+          <select name='category' required onChange={handleChange} value={formData.category}>
             <option value='dryfruits'>Dryfruits</option>
             <option value='sproutes'>Sproutes</option>
           </select>
@@ -90,7 +102,7 @@ const CreateProduct = () => {
           <input name='tags' type='text' placeholder='Separate tags by commas' required onChange={handleChange} />
         </div>
         <div>
-          <button type='submit'>Submit</button>
+          <button type='submit' disabled={isSubmitting}>Submit</button>
         </div>
       </form>
       <button onClick={goBack}>Back</button>
