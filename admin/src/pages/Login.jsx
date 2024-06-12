@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './css/Login.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import {useDispatch} from 'react-redux'
-import { loginFail, loginStart, loginSuccess } from '../redux/features/auth.slice'
+import {useDispatch, useSelector} from 'react-redux'
+import { fetchUser } from '../redux/features/auth.slice'
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
+  const [err, setError] = useState('');
+  const { loading, error, isAuth } = useSelector((state) => state.auth);
   const handleEmailChange = (e) => { 
     setEmail(e.target.value);
   };
@@ -25,30 +24,24 @@ const Login = () => {
     if (!email || !password) {
       setError('Please enter both email and password.');
     } else {
-      setError('');
-      try {
-        dispatch(loginStart())
-        const resp = await axios.post('/auth/signin', { email, password });
-        console.log(resp.data)
-        if (resp.data.success && resp.data.data.role==='admin') {
-          // localStorage.setItem('isAuth', 'true');
-          dispatch(loginSuccess(resp.data.data))
-          navigate('/admin/manage'); 
-        } else {
-          dispatch(loginFail('Only admins are allowed'))
-          setError('Invalid login credentials Only admins are allowed');
-        }
-      } catch (err) {
-        dispatch(loginFail(err.message))
-        setError('Error logging in. Please try again.');
-      }
+      dispatch(fetchUser({email,password}))
     }
   };
+
+  useEffect(() => {
+    if (isAuth) {
+      navigate('/admin/manage');
+    }
+    if(error){
+      setError(error)
+    }
+  }, [isAuth, error, navigate]);
+
 
   return (
     <div className="login-container">
       <h2>Login</h2>
-      {error && <p className="error">{error}</p>}
+      {err && <p className="error">{err}</p>}
       <form onSubmit={handleSubmit}>
         <div className="input-container">
           <label>Email</label>

@@ -132,6 +132,19 @@ export const dislike = async (req,res,next)=>{
     }
 }
 
+export const getProductsAsc = async (req,res,next)=>{
+    if(req.role==='user') return next(returnError(401,'Unauthorized user'))
+    try{
+        const resp = await Product.find().sort({price:1})
+        return res.status(200).json({
+            success:true,
+            data:resp
+        })
+    }catch(err){
+        next(err)
+    }
+}
+
 export const random = async (req,res,next)=>{
     try{
         let finalList;
