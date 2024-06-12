@@ -2,11 +2,16 @@ import React from 'react'
 import './Navbar.css'
 import { useNavigate } from 'react-router-dom';
 import nav_log from '../../assets/logos/png/logo-no-background.png'
+import { logoutFail, logoutStart, logoutSuccess } from '../../redux/features/auth.slice';
+import { useDispatch } from 'react-redux'
 
 const Navbar = () => {
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const handleLogout = ()=>{
-    localStorage.removeItem('isAuth')
+    dispatch(logoutStart())
+    // localStorage.removeItem('isAuth')
+    dispatch(logoutSuccess())
     navigate('/admin/auth')
   }
   return (
