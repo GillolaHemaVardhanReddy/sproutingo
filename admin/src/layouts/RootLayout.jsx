@@ -2,10 +2,11 @@ import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer';
+import {useSelector} from 'react-redux'
 
 const RootLayout = () => {
-  const isAuth = localStorage.getItem('isAuth') === 'true'; // Check if user is authenticated
-
+  // const isAuth = localStorage.getItem('isAuth') === 'true'; // Check if user is authenticated
+  const isAuth = useSelector(state=>state.auth.isAuth)
   return (
     <>
       <Navbar />
