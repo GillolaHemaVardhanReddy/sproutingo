@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import './ProductDisplay.css';
-import axios from 'axios';
 import ProductCard from '../ProductCard/ProductCard';
 import { incrementRefreshCounter } from '../../redux/features/refresh.slice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -25,16 +24,22 @@ const ProductHead = () => {
 
 const ProductDisplay = () => {
   const refreshCounter = useSelector(state=>state.refresh.refreshCounter)
+  const productState = useSelector(state=>state.product.products)
   const dispatch = useDispatch()
-  const products = useSelector(state=>state.product.products)
-  const fetchData = async () => {
-    dispatch(fetchProducts())
-  };
+  const [products,setProducts] = useState([])
 
   useEffect(() => {
+    const fetchData = async () => {
+      dispatch(fetchProducts())
+    };
     fetchData();
-  }, [refreshCounter]);
+  }, [refreshCounter,dispatch]);
  
+
+  useEffect(() => {
+    setProducts(productState);
+  }, [productState]);
+
   const refreshhandle = () => {
     dispatch(incrementRefreshCounter());
   };
@@ -61,6 +66,7 @@ const ProductDisplay = () => {
                 image={item.thumb_img}
                 dis_price={item.dis_price}
                 refresh={refreshhandle}
+                isdeleted={item.isdeleted}
               />
             ))
           }

@@ -36,7 +36,7 @@ export const deleteProduct = async (req,res,next)=>{
     try{
         if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
         
-        await checkProductExist(req.params.id)
+        await checkProductExist(req.params.id,req.user.id)
 
         await Product.findOneAndUpdate(
             {_id:req.params.id},
@@ -54,7 +54,7 @@ export const update = async (req,res,next)=>{
     if(req.role==='user') return next(returnError(401,'Unauthorized user'))
     try{
         if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
-        await checkProductExist(req.params.id)
+        await checkProductExist(req.params.id,req.user.id)
         
         const updatedProduct = await Product.findByIdAndUpdate({_id:req.params.id},{
             $set: req.body
@@ -73,7 +73,7 @@ export const like = async (req,res,next)=>{
             return next( returnError(400,'Invalid product id'));
         }
 
-        await checkProductExist(req.params.id)
+        await checkProductExist(req.params.id,req.user.id)
 
         const likedProduct = await Like.findOne({
             userId:req.user.id,
@@ -108,7 +108,7 @@ export const dislike = async (req,res,next)=>{
             return next( returnError(400,'Invalid product id'));
         }
 
-        await checkProductExist(req.params.id)
+        await checkProductExist(req.params.id,req.user.id)
         
         const likedProduct = await Like.findOne({userId:req.user.id,productId:req.params.id})
         if(likedProduct){
@@ -204,11 +204,31 @@ export const globalSearch = async (req,res,next)=>{
         if(!query){
             return  res.json('no product found').status(200)
         }
-        const finalResp = await searchProductGlobal(query);
+        const finalResp = await searchProductGlobal(query,req.role);
         res.status(200).json({
             success:true,
             data:finalResp
         })
+    }catch(err){
+        next(err)
+    }   
+}
+
+export const activateDelete = async (req,res,next)=>{
+    if(req.role==='user') return next(returnError(401,'Unauthorized user'))
+    try{
+        if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
+        
+        const product = await Product.findById(req.params.id)
+        if(!product.isdeleted){
+            return next(returnError(409,'Product is not deleted'))
+        }
+        
+        await Product.findOneAndUpdate(
+            {_id:req.params.id},
+            {$set : {isdeleted: false}},
+        )
+        res.status(200).json({success:true,data:'product successfully recovered'})
     }catch(err){
         next(err)
     }   

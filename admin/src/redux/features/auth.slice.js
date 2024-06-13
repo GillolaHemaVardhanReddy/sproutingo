@@ -11,7 +11,11 @@ const initialState = {
 export const fetchUser = createAsyncThunk('auth/fetchuser',async ({email,password})=>{
     try{
         const resp = await axios.post('/auth/signin', { email, password });
-        if(resp.data.success && resp.data.data.role==='admin') return resp.data.data
+        if(resp.data.success && resp.data.data.role==='admin') return {
+          email:resp.data.data.email,
+          name:resp.data.data.name,
+          id:resp.data.data._id
+        }
         else throw new Error("Only admins are allowed");
     }catch(err){   
         if (err.response && err.response.data && err.response.data.message) {
@@ -30,7 +34,6 @@ const AuthSlice = createSlice({
             state.loading = true;
         },
         logoutSuccess : (state,{payload})=>{
-            console.log(payload)
             state.isAuth = false;
             state.user = {}
             state.error = ''
@@ -51,7 +54,7 @@ const AuthSlice = createSlice({
       })
       .addCase(fetchUser.fulfilled, (state, {payload}) => {
         state.loading = false;
-        state.user = payload
+        state.user = payload 
         state.isAuth = true;
       })
       .addCase(fetchUser.rejected, (state, {error}) => {

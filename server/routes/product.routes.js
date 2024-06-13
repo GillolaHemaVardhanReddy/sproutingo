@@ -1,5 +1,5 @@
 import express from "express";
-import { clientProducts,
+import { activateDelete, clientProducts,
      create,
      deleteProduct, 
      dislike, 
@@ -11,18 +11,21 @@ import { clientProducts,
      search, 
      update
 } from '../controllers/product.controllers.js'
-import { Authentication, filterProducts } from "../utils/authntication.js";
+import { Authentication, filteredAuthentication } from "../utils/authntication.js";
 
 const router = express.Router()
 
 // get products for clients
-router.get('/all',filterProducts,clientProducts)
+router.get('/all',filteredAuthentication,clientProducts)
 
 // get products by tags
 router.get('/tags',getByTag)
 
+// activate deleted products
+router.get('/:id',Authentication,activateDelete)
+
 //get product from Global search matches all name/tags/desc/category
-router.get('/search',globalSearch)
+router.get('/search',filteredAuthentication,globalSearch)
 
 // get products ascending order (only for admin)
 router.get('/display',Authentication,getProductsAsc)

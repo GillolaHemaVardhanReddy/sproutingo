@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { uploadFile } from '../../helper/uploadFile';
 
-const ProductCard = ({ name, desc, disc, price, cat, dis_price, tags, image, avail, id, refresh }) => {
+const ProductCard = ({ name, desc, disc, price, cat, dis_price, tags, image, avail, id, refresh, isdeleted }) => {
     const [edit, setEdit] = useState(false);
     const [product, setProduct] = useState({
       name: name || '',
@@ -15,7 +15,8 @@ const ProductCard = ({ name, desc, disc, price, cat, dis_price, tags, image, ava
       category: cat || '',
       tags: tags || '',
       available: avail || false,
-      thumb_img: image 
+      thumb_img: image ,
+      isdeleted : isdeleted
     });
   
     const handleChange = async (e) => {
@@ -52,20 +53,28 @@ const ProductCard = ({ name, desc, disc, price, cat, dis_price, tags, image, ava
       }
     };
   
-    const handleDelete = async () => {
+    const handleDelete = async (e) => {
       try {
-        const userConfirmed = window.confirm("Are you sure you want to delete this product?");
-        if (userConfirmed) {
-          const resp = await axios.delete(`/product/${id}`);
-          if (resp.data.success) {
-            refresh();
+        const userConfirmed = window.confirm(`Are you sure you want to ${e.target.innerHTML} ${product.name}?`);
+        if(e.target.innerHTML === 'Recover'){
+          if (userConfirmed) {
+            const resp = await axios.get(`/product/${id}`)
+            if(resp.data.success){
+              refresh();
+            }
+          }
+        }else{
+          if (userConfirmed) {
+            const resp = await axios.delete(`/product/${id}`);
+            if (resp.data.success) {
+              refresh();
+            }
           }
         }
       } catch (err) {
         console.log(err.message);
       }
     };
-    
   
     return (
       <tr className='individual-product'>
@@ -86,7 +95,9 @@ const ProductCard = ({ name, desc, disc, price, cat, dis_price, tags, image, ava
         <td>{edit ? <input type='text' value={product.tags} name='tags' onChange={handleChange} /> : product.tags}</td>
         <td className='product-btn'>
           <button className='edit-btn' onClick={handleEdit}>{edit ? 'Submit' : 'Edit'}</button>
-          <button className='delete-btn' onClick={handleDelete}>Delete</button>
+          <button className='delete-btn' onClick={handleDelete}>{
+            product.isdeleted ? 'Recover' : 'Delete'  
+          }</button>
         </td>
       </tr>
     );

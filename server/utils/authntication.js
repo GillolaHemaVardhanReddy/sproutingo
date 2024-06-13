@@ -27,7 +27,7 @@ export const Authentication = async (req,res,next)=>{
     }
 }
 
-export const filterProducts = async (req,res,next)=>{
+export const filteredAuthentication = async (req,res,next)=>{
     let token;
     if(req.signedCookies){
         token = req.signedCookies.auth

@@ -17,6 +17,8 @@ import productReducer from './features/product.slice'
 const persistConfig = {
     key: 'root',
     storage,
+    version: 1,
+    manualPersist: true
 }
 
 const rootReducer= combineReducers({

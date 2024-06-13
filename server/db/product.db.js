@@ -91,45 +91,51 @@ export const searchProduct = async (query) => {
     }
 };
 
-export const checkProductExist = async (id)=>{
+export const checkProductExist = async (id,userId)=>{
     try{
         const product = await Product.findById(id)
+        const user = await User.findById(userId)
+
+        if(!user) throw returnError(409,"user does not exist")
 
         if(!product) throw returnError(404,'product not found')
 
-        if(product.isdeleted) throw returnError(409,"product is not avilable")
+        if(user.role==="user"){
+            if(product.isdeleted) throw returnError(409,"product is not avilable")
         
-        if(!product.available) throw returnError(409,"product is not available")
-     
-        else return product
+            if(!product.available) throw returnError(409,"product is not available")
+        } else return product
     }catch(err){
         throw err;
     }
 }
 
-export const searchProductGlobal = async (query) => {
+export const searchProductGlobal = async (query, role) => {
     try {
-        const finalRes = await Product.find({
-            $and: [
-                {isdeleted: false},
-                {available: true},
-                {
-                    $or: [
-                        { name: { $regex: query, $options: "i" } },
-                        { tags: { $elemMatch: { $regex: query, $options: "i" } } },
-                        { desc: { $regex: query, $options: "i" } },
-                        { category: { $regex: query, $options: "i" } },
-                    ]
-                }
+        // Define the base query with the search criteria
+        const searchCriteria = {
+            $or: [
+                { name: { $regex: query, $options: "i" } },
+                { tags: { $elemMatch: { $regex: query, $options: "i" } } },
+                { desc: { $regex: query, $options: "i" } },
+                { category: { $regex: query, $options: "i" } },
             ]
-        })
+        };
+
+        if (role !== 'admin') {
+            searchCriteria.isdeleted = { $ne: true }; // Non-admins should not see deleted products
+            searchCriteria.available = true; // Non-admins should only see available products
+        }
+
+        const finalRes = await Product.find(searchCriteria);
 
         if (!finalRes.length) {
-            throw returnError(404,"No products found");
+            throw returnError(404, "No products found");
         }
 
         return finalRes;
     } catch (err) {
-        throw err
+        throw err;
     }
 };
+
