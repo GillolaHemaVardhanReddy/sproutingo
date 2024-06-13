@@ -63,6 +63,10 @@ const ordersSchema = new mongoose.Schema({
         type:Boolean,
         default:false,
     },
+    isdelete:{
+        type: Boolean,
+        default: false
+    }
 })
 
 const Order = mongoose.model("Order",ordersSchema);
