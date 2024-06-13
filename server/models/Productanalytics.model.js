@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const productsAnalyticsSchema = new mongoose.Schema(
   {
@@ -9,7 +9,7 @@ const productsAnalyticsSchema = new mongoose.Schema(
     productId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'Product', 
+      ref: 'Product',
     },
     likesCount: {
       type: Number,
@@ -27,10 +27,10 @@ const productsAnalyticsSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    searchCount:{
-        type: Number,
-        default: 0
-    }
+    searchCount: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

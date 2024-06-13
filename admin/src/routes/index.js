@@ -9,6 +9,8 @@ import { Navigate, Outlet, Route, createBrowserRouter, createRoutesFromElements 
 import Welcome from '../pages/Welcome';
 import UserLayout from '../layouts/UserLayout';
 import Users from '../pages/Users';
+import AnalyticsLayout from '../layouts/AnalyticsLayout';
+import AnalyticsWelcome from '../components/AnalyticsWelcome/AnalyticsWelcome';
 // import {fetchProductData} from '../helper/productsFetch'
 
 export const SiteRouter = createBrowserRouter(
@@ -25,6 +27,10 @@ export const SiteRouter = createBrowserRouter(
           </Route>
           <Route path='users' element={<UserLayout/>}>
             <Route index element={<Users />} />
+          </Route>
+          <Route path='analytics' element={<AnalyticsLayout/>}>
+            <Route index element={<AnalyticsWelcome/>}/>
+            <Route path='products' element/>
           </Route>
         </Route>
       </Route>

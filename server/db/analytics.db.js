@@ -141,3 +141,18 @@ export const increaseSearchCount = async (productsArray) => {
       throw error; 
     }
   };
+
+
+  export const getProductsAnalyticsWithDetails = async () => {
+    try {
+      const analytics = await ProductAnalytics.find({}, 'productName likesCount unlikesCount')
+        .populate({
+          path: 'productId',
+          select: 'discount price',
+        });
+      return analytics;
+    } catch (error) {
+      console.error('Error retrieving product analytics:', error);
+      throw error;
+    }
+  };

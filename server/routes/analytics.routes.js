@@ -1,28 +1,12 @@
 import express from "express";
-import { Authentication } from "../utils/authntication";
+import { Authentication } from "../utils/authntication.js";
+import { mostLikedProducts } from "../controllers/analytics.controllers.js";
 
 
 const router = express.Router()
 
-// get most liked products top 10 or any number pavan anna thinks 
-router.get('/mostliked' , Authentication ,  )
-
-
-// get least liked products only for admins
-router.get('/leastliked', Authentication , )
-
-
-// products which are most ordered
-router.get('/mostordered', Authentication , )
-
-// products which are least ordered
-router.get('leaseordered', Authentication , )
-
-// specific user ordered which product category the most
-
-// specific user ordered which product category the lease
-
-// 
+// get all data of product with likes and unlikes count
+router.get('/products/mostliked' , Authentication , mostLikedProducts )
 
 
 export default router
