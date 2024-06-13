@@ -36,6 +36,7 @@ const ProductDisplay = () => {
   }, [refreshCounter,dispatch]);
  
 
+
   useEffect(() => {
     setProducts(productState);
   }, [productState]);
@@ -67,6 +68,7 @@ const ProductDisplay = () => {
                 dis_price={item.dis_price}
                 refresh={refreshhandle}
                 isdeleted={item.isdeleted}
+                date ={item.createdAt}
               />
             ))
           }

@@ -3,8 +3,9 @@ import './ProductCard.css'
 import { useState } from 'react';
 import axios from 'axios';
 import { uploadFile } from '../../helper/uploadFile';
+// import ReactTimeAgo from 'react-time-ago'
 
-const ProductCard = ({ name, desc, disc, price, cat, dis_price, tags, image, avail, id, refresh, isdeleted }) => {
+const ProductCard = ({ name, desc, disc, price, cat, dis_price, tags, image, avail, id, refresh, isdeleted, date }) => {
     const [edit, setEdit] = useState(false);
     const [product, setProduct] = useState({
       name: name || '',
@@ -78,7 +79,7 @@ const ProductCard = ({ name, desc, disc, price, cat, dis_price, tags, image, ava
   
     return (
       <tr className='individual-product'>
-        <td>{edit ?<input type='file' name='thumb_img' onChange={handleChange} /> : <img src={product.thumb_img} alt='Product' className='product-image' />}</td>
+        <td className='product-image-holder'>{edit ?<input type='file' name='thumb_img' onChange={handleChange} /> : <img src={product.thumb_img} alt='Product' className='product-image' />}</td>
         <td>{edit ? <input type='text' value={product.name} name='name' onChange={handleChange} /> : product.name}</td>
         <td>{edit ? <input type='text' value={product.desc} name='desc' onChange={handleChange} /> : product.desc}</td>
         <td>{edit
