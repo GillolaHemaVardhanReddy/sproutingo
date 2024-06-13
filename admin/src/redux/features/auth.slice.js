@@ -2,10 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const initialState = {
-    user: {},
-    isAuth: false,
-    loading: false,
-    error: ''
+  user: {},
+  isAuth: false,
+  loading: false,
+  error: ''
 }
 
 export const fetchUser = createAsyncThunk('auth/fetchuser',async ({email,password})=>{
@@ -31,19 +31,19 @@ const AuthSlice = createSlice({
     initialState,
     reducers:{
         logoutStart:(state)=>{
-            state.loading = true;
+          state.loading = true;
         },
         logoutSuccess : (state,{payload})=>{
-            state.isAuth = false;
-            state.user = {}
-            state.error = ''
-            state.loading = false
+          state.isAuth = false;
+          state.user = {}
+          state.error = ''
+          state.loading = false
         },
         logoutFail : (state,{payload})=>{
-            state.error = payload
+          state.error = payload
         },
         clearError: (state) => {
-            state.error = '';
+          state.error = '';
         },
     },
     extraReducers: (builder) => {
@@ -69,8 +69,8 @@ export default AuthSlice.reducer
 
 
 export const {
-    logoutStart,
-    logoutSuccess,
-    logoutFail,
-    clearError
+  logoutStart,
+  logoutSuccess,
+  logoutFail,
+  clearError
 } = AuthSlice.actions
