@@ -18,7 +18,7 @@ const OrderMenuButton = () => {
     <div className='order-menu-buttons'>
     {items.map((item,ind) => {
       return  <div key={ind} >
-               <p id={ind} onClick={handleClick} className='order-menu-p'>{item}</p>
+              <p id={ind} onClick={handleClick} className='order-menu-p'>{item}</p>
           </div>
  })}
     </div>
