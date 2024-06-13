@@ -1,11 +1,34 @@
 import express from "express";
-import { create, deleteProduct, dislike, getByTag, getProductById, like, random, search, update } from '../controllers/product.controllers.js'
-import { Authentication, filterProducts } from "../utils/authntication.js";
+import { activateDelete, clientProducts,
+     create,
+     deleteProduct, 
+     dislike, 
+     getByTag, 
+     getProductById, 
+     getProductsAsc, 
+     globalSearch, 
+     like, 
+     search, 
+     update
+} from '../controllers/product.controllers.js'
+import { Authentication, filteredAuthentication } from "../utils/authntication.js";
 
 const router = express.Router()
- 
-// create a product (authenticated and only for admin)
-router.post('/',Authentication,create)
+
+// get products for clients
+router.get('/all',filteredAuthentication,clientProducts)
+
+// get products by tags
+router.get('/tags',getByTag)
+
+// activate deleted products
+router.get('/:id',Authentication,activateDelete)
+
+//get product from Global search matches all name/tags/desc/category
+router.get('/search',filteredAuthentication,globalSearch)
+
+// get products ascending order (only for admin)
+router.get('/display',Authentication,getProductsAsc)
 
 // get product by id (unuthenticated or authenticated)
 router.get('/find/:id',getProductById)
@@ -22,13 +45,10 @@ router.post('/like/:id',Authentication,like)
 // unlike product by id (authenticated user)
 router.post('/unlike/:id',Authentication,dislike)
 
-// get random products (unauthenticated or authenticated)
-router.get('/',filterProducts,random)
+// get products asc order of price products (unauthenticated or authenticated)
+router.get('/',getProductsAsc)
 
-// get products by tags
-router.get('/tags',getByTag)
-
-//get product from search
-router.get('/search',search)
+// create a product (authenticated and only for admin)
+router.post('/',Authentication,create)
 
 export default router

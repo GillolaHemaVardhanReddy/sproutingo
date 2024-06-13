@@ -14,6 +14,6 @@ router.post('/activate-account' , Activate)
 router.post('/signin' , signinRules , validate ,signin)
 
 //sigout user
-router.post('/signout',signout)
+router.get('/signout',signout)
 
 export default router

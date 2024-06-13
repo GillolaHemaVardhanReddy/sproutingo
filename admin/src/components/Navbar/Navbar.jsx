@@ -2,17 +2,24 @@ import React from 'react'
 import './Navbar.css'
 import { useNavigate } from 'react-router-dom';
 import nav_log from '../../assets/logos/png/logo-no-background.png'
-import { logoutFail, logoutStart, logoutSuccess } from '../../redux/features/auth.slice';
+import { logoutStart, logoutSuccess } from '../../redux/features/auth.slice';
 import { useDispatch } from 'react-redux'
+import axios from 'axios';
 
 const Navbar = () => {
   const dispatch = useDispatch()
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const handleLogout = ()=>{
     dispatch(logoutStart())
+    try{
+      const resp = axios('/auth/signout')
+      console.log(resp)
+      dispatch(logoutSuccess())
+      navigate('/admin/auth')
+    }catch(err){
+      console.log(err)
+    }
     // localStorage.removeItem('isAuth')
-    dispatch(logoutSuccess())
-    navigate('/admin/auth')
   }
   return (
     <div className='nav-container'>

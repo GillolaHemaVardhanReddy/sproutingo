@@ -22,6 +22,9 @@ export const getUserById = async (req, res, next) => {
             return next(returnError(400, 'Invalid user id'));
         const user = await User.findById(req.params.id)
         if (!user) return next(returnError(404, 'user not found'))
+        if(user.isdeleted){
+            return next(returnError(404,'user deleted please contact'))
+        }
         res.status(200).json({
             success: true,
             data: user
@@ -35,6 +38,10 @@ export const getUserById = async (req, res, next) => {
 export const getUserDetails = async (req, res, next) => {
     try{
         const user = await User.findById(req.user.id)
+        if (!user) {
+            return next(returnError(404, 'User not found'));
+        }
+        
         res.status(200).json({
             success: true,
             data: user
@@ -45,40 +52,74 @@ export const getUserDetails = async (req, res, next) => {
     }
 }
 
-export const deleteUserAccount = async(req,res, next) =>{
-    if(req.role === 'admin')
-    return next(returnError(401, "Can't delete admin account"))
-    try{
-        await User.findByIdAndDelete(req.user.id)
+export const deleteUserAccount = async (req, res, next) => {
+    if (req.role === 'admin') {
+        return next(returnError(401, "Can't delete admin account"));
+    }
+
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return next(returnError(404, "User not found"));
+        }
+
+        if (user.isdeleted) {
+            return next(returnError(409, "User already deleted, contact support team"));
+        }
+
+        const result = await User.findOneAndUpdate(
+            { _id: req.user.id },
+            { $set: { isdeleted: true } },
+            { new: true }
+        );
+
+        if (!result) {
+            return next(returnError(404, "User not found"));
+        }
+
         res.status(200).json({
             success: true,
             message: 'Account deleted successfully'
-        })
-    }catch(err){
-        console.error("Error delete user controller");
-        next(err)
+        });
+    } catch (err) {
+        console.error("Error in deleteUserAccount controller:", err);
+        next(err);
     }
 }
 
-export const updateUser = async(req, res, next) => {
-    if (Object.keys(req.body).length === 0) return next(returnError(400, 'enter valid details to update'));
-    try{
-        const updatedUser = await User.findByIdAndUpdate({_id: req.user.id},{
-            $set: req.body
-        },{new: true})
+
+export const updateUser = async (req, res, next) => {
+    if (Object.keys(req.body).length === 0) {
+        return next(returnError(400, 'Enter valid details to update'));
+    }
+
+    try {
+        const updatedUser = await User.findByIdAndUpdate(
+            { _id: req.user.id },
+            { $set: req.body },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return next(returnError(404, "User not found"));
+        }
+
         res.status(200).json({
             success: true,
             data: updatedUser
-        })
-    }catch(err){
-        console.error("Error updating user controller");
-        next(err)
+        });
+    } catch (err) {
+        console.error("Error in updateUser controller:", err);
+        next(err);
     }
-}
+};
+
 
 export const addToCart = async (req, res, next) => {
     try {
         const userId = req.user.id; 
+        
         const { productId, quantity } = req.body;
 
         if (!productId || !quantity || quantity < 1) {
@@ -87,11 +128,15 @@ export const addToCart = async (req, res, next) => {
 
         const product = await Product.findById(productId);
 
+        if(product.isdeleted || !product.available){
+            return next(returnError(409,'cant add unavailable data to cart'))
+        }
+
         if (!product) {
             return res.status(404).json({ success:false, error: "Product not found" });
         }
 
-        const price = product.price; 
+        const price = product.price * quantity; 
 
         const user = await User.findById(userId);
 
@@ -150,6 +195,7 @@ export const editCart = async (req, res, next) => {
         if (quantity === 0) {
             user.cart.splice(productIndex, 1);
         } else {
+            user.cart[productIndex].price = ((user.cart[productIndex].price)/user.cart[productIndex].quantity)*quantity
             user.cart[productIndex].quantity = quantity;
         }
 
@@ -209,4 +255,3 @@ export const getWishlist = async (req, res, next) => {
         next(returnError(err));
     }
 };
-

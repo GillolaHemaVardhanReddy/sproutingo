@@ -14,6 +14,10 @@ export const Authentication = async (req,res,next)=>{
         if (!user) {
             return next(returnError(404, 'User not found'));
         }
+
+        if(user.isdeleted){
+            return next(returnError(409, 'User deleted please contact support team'));
+        }
         
         req.user = {id:user.id};
         req.role = user.role
@@ -23,7 +27,7 @@ export const Authentication = async (req,res,next)=>{
     }
 }
 
-export const filterProducts = async (req,res,next)=>{
+export const filteredAuthentication = async (req,res,next)=>{
     let token;
     if(req.signedCookies){
         token = req.signedCookies.auth
@@ -33,6 +37,11 @@ export const filterProducts = async (req,res,next)=>{
             const resp = jwt.verify(token,process.env.JWT_SECRET)
             const user = await User.findOne({_id:resp.id})
             req.user = {id:user.id};
+
+            if(user.isdeleted){
+                return next(returnError(409, 'User deleted please contact support team'));
+            }
+
             req.role = user.role
         }
         next()

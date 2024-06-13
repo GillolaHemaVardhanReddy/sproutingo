@@ -28,13 +28,13 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    imgUrls: {
-        type: [String],
-        validate: {
-            validator: urlValidator,
-            message: props => `${props.value} contains an invalid URL!`
-        },
-    },
+    // imgUrls: {
+    //     type: [String],
+    //     validate: {
+    //         validator: urlValidator,
+    //         message: props => `${props.value} contains an invalid URL!`
+    //     },
+    // },
     desc: {
         type: String,
         required: true,
@@ -49,10 +49,10 @@ const productSchema = new mongoose.Schema({
         type: [String],
         required: true,
     },
-    // mixed_products: {
-    //     type: [mongoose.Schema.Types.ObjectId],
-    //     ref: 'Product', // refers to this model itself
-    // },
+    isdeleted: {
+        type: Boolean,
+        default: false
+    },
 },{timestamps:true});
 
 productSchema.pre('save',(next)=>{

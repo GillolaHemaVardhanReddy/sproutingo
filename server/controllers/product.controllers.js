@@ -1,4 +1,4 @@
-import { checkProductExist, getFilteredProduct, getProductByTag, searchProduct } from "../db/product.db.js"
+import { checkProductExist, getFilteredProduct, getProductByTag, searchProduct, searchProductGlobal } from "../db/product.db.js"
 import Like from "../models/likes.model.js"
 import Product from "../models/product.model.js"
 import { returnError } from "../utils/error.js"
@@ -35,8 +35,13 @@ export const deleteProduct = async (req,res,next)=>{
     if(req.role==='user') return next(returnError(401,'Unauthorized user'))
     try{
         if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
-        await checkProductExist(req.params.id)
-        await Product.findOneAndDelete({_id:req.params.id})
+        
+        await checkProductExist(req.params.id,req.user.id)
+
+        await Product.findOneAndUpdate(
+            {_id:req.params.id},
+            {$set : {isdeleted: true}},
+        )
         res.status(200).json({success:true,data:'product successfully deleted'})
     }catch(err){
         console.error("Error delete product controller");
@@ -49,7 +54,7 @@ export const update = async (req,res,next)=>{
     if(req.role==='user') return next(returnError(401,'Unauthorized user'))
     try{
         if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
-        await checkProductExist(req.params.id)
+        await checkProductExist(req.params.id,req.user.id)
         
         const updatedProduct = await Product.findByIdAndUpdate({_id:req.params.id},{
             $set: req.body
@@ -68,12 +73,12 @@ export const like = async (req,res,next)=>{
             return next( returnError(400,'Invalid product id'));
         }
 
-        const product = await Product.findById(req.params.id)
-        if(!product){
-            return next(returnError(404,'product not found'))
-        }
-        
-        const likedProduct = await Like.findOne({userId:req.user.id,productId:req.params.id})
+        await checkProductExist(req.params.id,req.user.id)
+
+        const likedProduct = await Like.findOne({
+            userId:req.user.id,
+            productId:req.params.id
+        })
         if(likedProduct){
             if(likedProduct.like){
                 return res.status(200).json('already liked')
@@ -103,10 +108,7 @@ export const dislike = async (req,res,next)=>{
             return next( returnError(400,'Invalid product id'));
         }
 
-        const product = await Product.findById(req.params.id)
-        if(!product){
-            return next(returnError(404,'product not found'))
-        }
+        await checkProductExist(req.params.id,req.user.id)
         
         const likedProduct = await Like.findOne({userId:req.user.id,productId:req.params.id})
         if(likedProduct){
@@ -132,7 +134,20 @@ export const dislike = async (req,res,next)=>{
     }
 }
 
-export const random = async (req,res,next)=>{
+export const getProductsAsc = async (req,res,next)=>{
+    if(req.role==='user') return next(returnError(401,'Unauthorized user'))
+    try{
+        const resp = await Product.find().sort({price:1})
+        return res.status(200).json({
+            success:true,
+            data:resp
+        })
+    }catch(err){
+        next(err)
+    }
+}
+
+export const clientProducts = async (req,res,next)=>{
     try{
         let finalList;
         if(req.user){
@@ -153,8 +168,8 @@ export const random = async (req,res,next)=>{
 
 
 export const getByTag = async (req,res,next)=>{
-    const tags = req.query.tags.split(",")
     try{
+        const tags = req.query.tags.split(",")
         const finalResp = await getProductByTag(tags);
         res.status(200).json({
             success:true,
@@ -167,8 +182,8 @@ export const getByTag = async (req,res,next)=>{
 }
 
 export const search = async (req,res,next)=>{
-    const query = req.query.q
     try{
+        const query = req.query.q
         if(!query){
             return  res.json('no product found').status(200)
         }
@@ -179,6 +194,42 @@ export const search = async (req,res,next)=>{
         })
     }catch(err){
         console.error("Error product search controller");
+        next(err)
+    }   
+}
+
+export const globalSearch = async (req,res,next)=>{
+    const query = req.query.q
+    try{
+        if(!query){
+            return  res.json('no product found').status(200)
+        }
+        const finalResp = await searchProductGlobal(query,req.role);
+        res.status(200).json({
+            success:true,
+            data:finalResp
+        })
+    }catch(err){
+        next(err)
+    }   
+}
+
+export const activateDelete = async (req,res,next)=>{
+    if(req.role==='user') return next(returnError(401,'Unauthorized user'))
+    try{
+        if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
+        
+        const product = await Product.findById(req.params.id)
+        if(!product.isdeleted){
+            return next(returnError(409,'Product is not deleted'))
+        }
+        
+        await Product.findOneAndUpdate(
+            {_id:req.params.id},
+            {$set : {isdeleted: false}},
+        )
+        res.status(200).json({success:true,data:'product successfully recovered'})
+    }catch(err){
         next(err)
     }   
 }

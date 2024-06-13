@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import './SearchBar.css';
+import { useDispatch } from 'react-redux'
+import { productSearch } from '../../redux/features/product.slice';
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = () => {
   const [query, setQuery] = useState('');
 
+  const dispatch = useDispatch()
+  
   const handleChange = (e) => {
     setQuery(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(query)
+    dispatch(productSearch(query))
   };
 
   return (
