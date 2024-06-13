@@ -40,7 +40,12 @@ export const deleteProduct = async (req,res,next)=>{
 
         await Product.findOneAndUpdate(
             {_id:req.params.id},
-            {$set : {isdeleted: true}},
+            {$set : 
+                {
+                    isdeleted: true,
+                    available: false,
+                }
+            },
         )
         res.status(200).json({success:true,data:'product successfully deleted'})
     }catch(err){
@@ -226,7 +231,11 @@ export const activateDelete = async (req,res,next)=>{
         
         await Product.findOneAndUpdate(
             {_id:req.params.id},
-            {$set : {isdeleted: false}},
+            {$set :{
+                    isdeleted: false,
+                    available: true
+                }
+            },
         )
         res.status(200).json({success:true,data:'product successfully recovered'})
     }catch(err){

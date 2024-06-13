@@ -21,9 +21,6 @@ router.get('/all',filteredAuthentication,clientProducts)
 // get products by tags
 router.get('/tags',getByTag)
 
-// activate deleted products
-router.get('/:id',Authentication,activateDelete)
-
 //get product from Global search matches all name/tags/desc/category
 router.get('/search',filteredAuthentication,globalSearch)
 
@@ -44,6 +41,9 @@ router.post('/like/:id',Authentication,like)
 
 // unlike product by id (authenticated user)
 router.post('/unlike/:id',Authentication,dislike)
+
+// activate deleted products
+router.get('/:id',Authentication,activateDelete)
 
 // get products asc order of price products (unauthenticated or authenticated)
 router.get('/',getProductsAsc)

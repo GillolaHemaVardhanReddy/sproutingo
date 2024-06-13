@@ -38,6 +38,7 @@ export const productSearch = createAsyncThunk(
         throw new Error("Failed to load data")
       }
     }catch(err){
+      console.log(err)
       if(err.response){
         throw new Error(err.response.data.message)
       }
