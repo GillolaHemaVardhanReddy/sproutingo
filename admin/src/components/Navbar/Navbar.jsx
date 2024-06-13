@@ -5,6 +5,7 @@ import nav_log from '../../assets/logos/png/logo-no-background.png'
 import { logoutStart, logoutSuccess } from '../../redux/features/auth.slice';
 import { useDispatch } from 'react-redux'
 import axios from 'axios';
+import { clearState } from '../../redux/features/product.slice'
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -15,6 +16,7 @@ const Navbar = () => {
       const resp = axios('/auth/signout')
       console.log(resp)
       dispatch(logoutSuccess())
+      dispatch(clearState())
       navigate('/admin/auth')
     }catch(err){
       console.log(err)
