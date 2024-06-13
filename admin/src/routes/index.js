@@ -7,6 +7,8 @@ import Login from '../pages/Login';
 import AuthLayout from '../layouts/AuthLayout';
 import { Navigate, Outlet, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import Welcome from '../pages/Welcome';
+import UserLayout from '../layouts/UserLayout';
+import Users from '../pages/Users';
 // import {fetchProductData} from '../helper/productsFetch'
 
 export const SiteRouter = createBrowserRouter(
@@ -20,6 +22,9 @@ export const SiteRouter = createBrowserRouter(
           <Route path='products' element={<ProductLayout/>}>
             <Route index element={<Products/>} />
             <Route path='create' element={<CreateProduct/>}/>
+          </Route>
+          <Route path='users' element={<UserLayout/>}>
+            <Route index element={<Users />} />
           </Route>
         </Route>
       </Route>
