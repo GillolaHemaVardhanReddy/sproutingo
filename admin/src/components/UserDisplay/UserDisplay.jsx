@@ -31,7 +31,7 @@ const UserDisplay = () => {
 
   return (
     <div className='user-display-container'>
-      <SetError/>
+      <SetError type="userErrorClear"/>
       <SearchBar type="searchUserDetail"/>
       <table className='user-display-table'>
         <thead>
