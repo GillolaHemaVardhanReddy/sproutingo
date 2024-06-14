@@ -15,6 +15,7 @@ import LineGraph from '../components/LineGraph/LineGraph';
 import OrdersLayout from '../layouts/OrdersLayout';
 import { NotDeliveredOrdersDisplay } from '../components/NotDeliveredOrdersDisplay/NotDeliveredOrdersDisplay';
 import {DeliveredOrdersDisplay} from '../components/DeliveredOrdersDisplay/DeliveredOrdersDisplay';
+import ComplaintLayout from '../layouts/ComplaintLayout';
 // import {fetchProductData} from '../helper/productsFetch'
 import { UpdateOrder } from '../components/UpdateOrder/UpdateOrder';
 import ComplaintLayout from '../layouts/ComplaintLayout';

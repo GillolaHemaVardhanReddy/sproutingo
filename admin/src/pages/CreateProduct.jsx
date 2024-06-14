@@ -94,7 +94,7 @@ const CreateProduct = () => {
           <label htmlFor='category'>Type</label>
           <select name='category' required onChange={handleChange} value={formData.category}>
             <option value='dryfruits'>Dryfruits</option>
-            <option value='sproutes'>Sproutes</option>
+            <option value='sproutes'>Sprouts</option>
           </select>
         </div>
         <div>
