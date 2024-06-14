@@ -1,14 +1,22 @@
 .complaint-navbar p{
-    padding-left: 500px;
-    padding-top: 20px;
     font-size: 35px;
+    color: rgb(59, 59, 59);
+  
 }
 
 .complaint-display {
-    width: 100%;
+    padding: 16px;
+    margin: 16px;
+    border: 1px solid #ddd;
+    overflow-x: auto;
+    border-radius: 8px;
     display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
+   
   }
   
   .complaint-display-table {
@@ -80,3 +88,49 @@
     background-color: #27ae60 !important;
   }
   
+
+ 
+.search-container {
+  display: inline-flex;
+  margin-top: 40px;
+  gap: 20px;
+}
+
+
+.search-container input[type="text"] {
+  width: 500px;
+  max-width: 400px;
+  padding: 10px 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: all 0.3s ease;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+
+.search-container input[type="text"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+
+.search-container input[type="text"]::placeholder {
+  color: #aaa;
+}
+.search-container button {
+  width: 150px;
+  /* padding-left: 10px; */
+}
+
+
+@media (max-width: 600px) {
+  .search-container input[type="text"] {
+    width: 90%;
+  }
+}
+
+

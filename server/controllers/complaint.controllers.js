@@ -3,9 +3,10 @@ import { returnError } from "../utils/error.js"
 import Complaint from "../models/complaint.model.js"
 
 //complaint will be created by user in frontend like from form text is taken 
-export const create = async (req, res, next) => {
+export const createComplaint = async (req, res, next) => {
     try {
-        const newComplaint = Complaint(req.body);
+        const userId = req.user.id;
+        const newComplaint = Complaint({userId,...req.body});
         await newComplaint.save()
         res.status(201).json({
             success: true,
@@ -80,17 +81,31 @@ export const getComplaint = async(req,res,next ) => {
 export const updateComplaint = async(req,res,next) => {
     if (req.role === 'user') return next(returnError(401, 'Unauthorized user'));
     try{
-        if (!mongoose.isValidObjectId(req.body.id))
+        if (!mongoose.isValidObjectId(req.params.id))
             return next(returnError(400, 'Invalid complaint id'));
-        else{
+       else{
             const cid = req.params.id;
-            const complaint = await Complaint.findOne({ cid });
-            complaint.isResolved = !complaint.isResolved;
-            await complaint.save();
-            return res.status(200).json({ message: 'Complaint updated', complaint });
-        }
+            const c = await Complaint.findOne({_id: cid });
+            c.isResolved = !c.isResolved
+
+            await c.save();
+            return res.status(200).json({ message: 'Complaint updated', c });
+       }
     } catch(err) {
         next(err);
     }
+}
+
+
+
+export const displayComplaints = async(req,res,next) => {
+    if (req.role === 'user') return next(returnError(401, 'Unauthorized user'))
+        try {
+            const complaints = await Complaint.find().populate("userId","name address.street phone")
+            res.status(200).json({success:true,data:complaints})
+        } catch (err) {
+            console.error("Error in geting all complaints controller");
+            next(err)
+        }
 }
 

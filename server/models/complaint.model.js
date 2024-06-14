@@ -9,12 +9,14 @@ const complaintSchema = new mongoose.Schema({
         type: String,
         required: true,
         minlength: 10,
-        maxlength: 150,
+        maxlength: 250,
     },
     isResolved: {
         type: Boolean,
         default: false,
-    },
-    
+    }
 
-})
+},{timestamps: true})
+
+const Complaint = mongoose.model("Complaint",complaintSchema);
+export default Complaint;
