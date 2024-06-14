@@ -48,6 +48,8 @@ export const SiteRouter = createBrowserRouter(
             <Route path="update/:id" element={<UpdateOrder/>} />
           </Route>
           <Route path='complaints' element={<ComplaintLayout/>}/>
+          <Route path='complaints' element={<ComplaintLayout />}>
+          </Route>
         </Route>
       </Route>
       <Route path='/admin/auth' element={<AuthLayout/>}>
