@@ -89,6 +89,7 @@ const productSlice = createSlice({
         productSlice.caseReducers.successState(state, { payload });
       })
       .addCase(productSearch.rejected, (state, { error }) => {
+        console.log(error)
         productSlice.caseReducers.failState(state, { error });
       })
   }

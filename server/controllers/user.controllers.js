@@ -3,14 +3,17 @@ import mongoose from "mongoose"
 import { returnError } from '../utils/error.js'
 import Product from '../models/product.model.js'
 import Like from '../models/likes.model.js'
+import chalk from "chalk"
 
 export const getAllUsers = async (req, res, next) => {
     if (req.role === 'user') return next(returnError(401, 'Unauthorized user'))
     try {
+        console.log(chalk.blue.bgWhite('entered into getAllUsers controller'))
         const users = await User.find()
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({success:true,data:users})
     } catch (err) {
-        console.error("Error in get all users controller");
+        console.log(chalk.red.bgWhite('error in getAllUsers controller: ',err.message))
         next(err)
     }
 }
@@ -18,6 +21,7 @@ export const getAllUsers = async (req, res, next) => {
 export const getUserById = async (req, res, next) => {
     if (req.role === 'user') return next(returnError(401, 'Unauthorized user'))
     try {
+        console.log(chalk.blue.bgWhite('entered into getUsersById controller'))
         if (!mongoose.isValidObjectId(req.params.id))
             return next(returnError(400, 'Invalid user id'));
         const user = await User.findById(req.params.id)
@@ -25,29 +29,32 @@ export const getUserById = async (req, res, next) => {
         if(user.isdeleted){
             return next(returnError(404,'user deleted please contact'))
         }
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({
             success: true,
             data: user
         })
     } catch (err) {
-        console.error("Error in get user by id controller");
+        console.log(chalk.red.bgWhite('error in getUserById controller: ',err.message))
         next(err)
     }
 }
 
 export const getUserDetails = async (req, res, next) => {
     try{
+        console.log(chalk.blue.bgWhite('entered into getUserDetails controller'))
         const user = await User.findById(req.user.id)
         if (!user) {
             return next(returnError(404, 'User not found'));
         }
         
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({
             success: true,
             data: user
         }) 
     }catch(err){
-        console.error("Error get user details controller");
+        console.log(chalk.red.bgWhite('error in getUserDetails controller: ',err.message))
         next(err)
     }
 }
@@ -58,6 +65,7 @@ export const deleteUserAccount = async (req, res, next) => {
     }
 
     try {
+        console.log(chalk.blue.bgWhite('entered into deleteUserAccount controller'))
         const user = await User.findById(req.user.id);
 
         if (!user) {
@@ -77,13 +85,13 @@ export const deleteUserAccount = async (req, res, next) => {
         if (!result) {
             return next(returnError(404, "User not found"));
         }
-
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({
             success: true,
             message: 'Account deleted successfully'
         });
     } catch (err) {
-        console.error("Error in deleteUserAccount controller:", err);
+        console.log(chalk.red.bgWhite('error in deleteUserAccount controller: ',err.message))
         next(err);
     }
 }
@@ -95,6 +103,7 @@ export const updateUser = async (req, res, next) => {
     }
 
     try {
+        console.log(chalk.blue.bgWhite('entered into updateUser controller'))
         const updatedUser = await User.findByIdAndUpdate(
             { _id: req.user.id },
             { $set: req.body },
@@ -105,12 +114,13 @@ export const updateUser = async (req, res, next) => {
             return next(returnError(404, "User not found"));
         }
 
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({
             success: true,
             data: updatedUser
         });
     } catch (err) {
-        console.error("Error in updateUser controller:", err);
+        console.log(chalk.red.bgWhite('error in updateUser controller: ',err.message))
         next(err);
     }
 };
@@ -118,6 +128,7 @@ export const updateUser = async (req, res, next) => {
 
 export const addToCart = async (req, res, next) => {
     try {
+        console.log(chalk.blue.bgWhite('entered into addToCart controller'))
         const userId = req.user.id; 
         
         const { productId, quantity } = req.body;
@@ -149,16 +160,17 @@ export const addToCart = async (req, res, next) => {
         }
 
         await user.save();
-
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({success:true, message: "Product added to cart", data: user.cart });
     } catch (err) {
-        console.error("Error add to cart controller");
+        console.log(chalk.red.bgWhite('error in addToCart controller: ',err.message))
         next(returnError(err));
     }
 };
 
 export const getCartDetails = async (req, res, next) => {
     try {
+        console.log(chalk.blue.bgWhite('entered into getCartDetails controller'))
         const userId = req.user.id; // Authenticated user ID from the middleware
 
         // Find the user and populate the cart product details
@@ -168,15 +180,17 @@ export const getCartDetails = async (req, res, next) => {
             return next(returnError(404,'user not found'))
         }
 
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({success:true, data: user.cart });
     } catch (err) {
-        console.error("Error get cart controller");
+        console.log(chalk.red.bgWhite('error in getCartDetails controller: ',err.message))
         next(returnError(err));
     }
 };
 
 export const editCart = async (req, res, next) => {
     try {
+        console.log(chalk.blue.bgWhite('entered into editCart controller'))
         const userId = req.user.id; 
         const { productId, quantity } = req.body;
 
@@ -201,15 +215,17 @@ export const editCart = async (req, res, next) => {
 
         await user.save();
 
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({ success:true, message: "Cart updated successfully", data: user.cart });
     } catch (err) {
-        console.error("Error edit cart controller");
+        console.log(chalk.red.bgWhite('error in editCart controller: ',err.message))
         next(returnError(err));
     }
 };
 
 export const deleteCartProduct = async (req,res,next)=>{
     try{
+        console.log(chalk.blue.bgWhite('entered into deleteCartProduct controller'))
         const userId = req.user.id; 
         const { productId, quantity } = req.body;
 
@@ -228,15 +244,18 @@ export const deleteCartProduct = async (req,res,next)=>{
         user.cart.splice(productIndex, 1);
          
         await user.save()
+
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({success:true,message:"successfullt deleted"})
     }catch(err){
-        console.error("Error delet cart controller");
+        console.log(chalk.red.bgWhite('error in deleteCartProduct controller: ',err.message))
         next(returnError(err));
     }
 }
 
 export const getWishlist = async (req, res, next) => {
     try {
+        console.log(chalk.blue.bgWhite('entered into getWishlist controller'))
         const userId = req.user.id; 
 
         const likedProducts = await Like.find({ userId }).populate('productId');
@@ -249,25 +268,25 @@ export const getWishlist = async (req, res, next) => {
 
         const productsDetails = await Product.find({ _id: { $in: productIds } });
 
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({success:true, data: productsDetails });
     } catch (err) {
-        console.error("Error get list controller");
+        console.log(chalk.red.bgWhite('error in deleteCartProduct controller: ',err.message))
         next(returnError(err));
     }
 };
 
 export const userGlobalSearch = async (req, res, next) => {
     try {
+        console.log(chalk.blue.bgWhite('entered into userGlobalSearch controller'))
         const searchTerm = req.query.q;
         if (!searchTerm) {
-            return res.status(400).json({ success:false, error: "Please provide a search term" });
+            return res.status(400).json({ success:false, message: "search can't be empty" });
         }  
 
         if (searchTerm.length < 3) {
-            return res.status(400).json({ success:false, error: "Search term must be at least 3 characters long" });
+            return res.status(400).json({ success:false, message: "Search term must be at least 3 characters long" });
         }
-
-        const isActiveFilter = {}
 
 
         const regex = new RegExp(searchTerm, 'i');
@@ -310,8 +329,12 @@ export const userGlobalSearch = async (req, res, next) => {
         const users = await User.find(
             {$and : filter}
         );
+        if(users.length===0) return next(returnError(404,"no user found"))
+
+        console.log(chalk.green.bgWhite('successfully cleared rules and sent response'))
         res.status(200).json({ success:true, data: users });
     }catch(err){
+        console.log(chalk.red.bgWhite('error in userGlobalSearch controller: ',err.message))
         next(err)
     }
 }
