@@ -7,7 +7,11 @@ import Login from '../pages/Login';
 import AuthLayout from '../layouts/AuthLayout';
 import { Navigate, Outlet, Route, createBrowserRouter, createRoutesFromElements } from 'react-router-dom';
 import Welcome from '../pages/Welcome';
+import OrdersLayout from '../layouts/OrdersLayout';
+import { NotDeliveredOrdersDisplay } from '../components/NotDeliveredOrdersDisplay/NotDeliveredOrdersDisplay';
+import {DeliveredOrdersDisplay} from '../components/DeliveredOrdersDisplay/DeliveredOrdersDisplay';
 // import {fetchProductData} from '../helper/productsFetch'
+import { UpdateOrder } from '../components/UpdateOrder/UpdateOrder';
 
 export const SiteRouter = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +24,14 @@ export const SiteRouter = createBrowserRouter(
           <Route path='products' element={<ProductLayout/>}>
             <Route index element={<Products/>} />
             <Route path='create' element={<CreateProduct/>}/>
+          </Route>
+          <Route path="orders" element={<OrdersLayout/>}>
+            <Route index element={<NotDeliveredOrdersDisplay/>} />
+            <Route path="notdelivered" element={<NotDeliveredOrdersDisplay />} />
+            <Route path="delivered" element={<DeliveredOrdersDisplay/>} />
+            <Route path="notdelivered/:id" element={<NotDeliveredOrdersDisplay />} />
+            <Route path="delivered/:id" element={<NotDeliveredOrdersDisplay />} />
+            <Route path="update/:id" element={<UpdateOrder/>} />
           </Route>
         </Route>
       </Route>
