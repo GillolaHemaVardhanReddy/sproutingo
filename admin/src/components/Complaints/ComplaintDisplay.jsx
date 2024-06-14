@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import './ComplaintDisplay.css';
 import axios from 'axios';
 import ReactTimeAgo from 'react-time-ago';
-
+import {useDispatch, useSelector} from 'react-redux'
+import {FetchComplaints, searchComplaint} from '../../redux/features/complaint.slice'
 function ComplaintDisplay() {
-
-  const [items,setComplaints] = useState([]);
-
-  const fetchComplaints = async () => {
-    try{
-      const resp = await axios.get('/complaint/');
-      setComplaints(resp.data.data);
-    } catch(err) {
-      console.log("error fetching complaints",err);
-    }
-  };
+  const dispatch = useDispatch();
+  const searchInputRef = useRef();
+  const items = useSelector(state => state.complaint.complaints)
 
   useEffect(()=>{
-    fetchComplaints();
-  }, [items]);
+    dispatch(FetchComplaints())
+  }, [dispatch]);
   
+
+  const handleSearch = ()=>{
+    const q = searchInputRef.current.value
+    dispatch(searchComplaint(q))
+  }
+
   const handleSolve = async (id) => {
-    const resp = await axios.put(`/complaint/${id}`);
-    fetchComplaints()
+    await axios.put(`/complaint/${id}`);
+    dispatch(FetchComplaints())
   };
 
   const handleDelete =  async (id) =>{
@@ -32,12 +31,10 @@ function ComplaintDisplay() {
         //delete
         try{
           const r = await axios.delete(`/complaint/${id}`);
+          dispatch(FetchComplaints())
         } catch(err) {
           console.log("error deleting complaints",err);
         }
-      }
-      else{
-
       }
       }  catch(err){
       console.log(err);
@@ -54,9 +51,10 @@ function ComplaintDisplay() {
           <input
               type='text'
               placeholder='Search....'
+              ref={searchInputRef}
             /> 
             <div className='btn'>
-              <button>Search</button>
+              <button onClick={handleSearch}>Search</button>
             </div>
         </div>
         <table className="complaint-display-table">

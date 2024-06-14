@@ -15,6 +15,7 @@ import storage from 'redux-persist/lib/storage'
 import productReducer from './features/product.slice'
 import analyticsReducer from './features/analytics.slice'
 import userDetailsReducer from './features/user.slice';
+import complaintReducer from './features/complaint.slice'
 
 const persistConfig = {
     key: 'root',
@@ -27,7 +28,8 @@ const rootReducer= combineReducers({
     'refresh': refreshReducer,
     'product' : productReducer,
     'analytics' : analyticsReducer,
-    'user': userDetailsReducer
+    'user': userDetailsReducer,
+    'complaint' : complaintReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

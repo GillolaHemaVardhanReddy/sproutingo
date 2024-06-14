@@ -1,6 +1,7 @@
 import mongoose from "mongoose"
 import { returnError } from "../utils/error.js"
 import Complaint from "../models/complaint.model.js"
+import User from "../models/user.model.js";
 
 //complaint will be created by user in frontend like from form text is taken 
 export const createComplaint = async (req, res, next) => {
@@ -40,29 +41,58 @@ export const deleteComplaint = async (req,res,next) =>{
 
 
 
-export const searchComplaintGlobal = async (query, role) => {
+const searchComplaintGlobal = async (query, role) => {
     try {
-        // Define the base query with the search criteria
-        const searchCriteria = {
+        // Define search criteria for the User collection
+        const userSearchCriteria = {
+            $or: [
+                { "address.street": { $regex: query, $options: "i" } },
+                { $expr: {
+                    $regexMatch:{
+                        input: {$toString: "$phone"},
+                        regex:  query,
+                        options: "i" 
+                    }
+                }},
+                { name: { $regex: query, $options: "i" } }
+            ]
+        };
+        
+        // Find matching users and extract their IDs
+        const users = await User.find(userSearchCriteria).select('_id');
+        const userIds = users.map(user => user._id);
+
+        // Define search criteria for the Complaint collection
+        const complaintSearchCriteria = {
             $or: [
                 { name: { $regex: query, $options: "i" } },
                 { complaint: { $regex: query, $options: "i" } },
                 { address: { $regex: query, $options: "i" } },
                 { phone: { $regex: query, $options: "i" } },
+                { userId: { $in: userIds } }
             ]
         };
-        const finalRes = await Complaint.find(searchCriteria);
+
+        // Perform the search and populate user information
+        const finalRes = await Complaint.find(complaintSearchCriteria).populate('userId', 'address.street phone name');
+
+        // Check if results are found
         if (!finalRes.length) {
-            throw returnError(404, "No COmplaints found");
+            throw returnError(404, "No Complaints found");
         }
+
         return finalRes;
     } catch (err) {
+        // Re-throw the error for the calling function to handle
         throw err;
     }
-}
+};
+
 
 export const getComplaint = async(req,res,next ) => {
+    if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     const query = req.query.q;
+    if(query.length<2) return next(returnError(404,'enter more than 2 charecters to search'))
     try{
         if(!query){
             return  res.json('no complaint found').status(200)

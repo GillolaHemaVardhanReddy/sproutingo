@@ -8,11 +8,11 @@ const initialState = {
     error: "",
 }
 
-export const fetchComplaints = createAsyncThunk(
+export const FetchComplaints = createAsyncThunk(
     "complaint/fetchcomplaints",
     async() => {
         try{
-            const resp = await axios('/complaint/');
+            const resp = await axios.get('/complaint/');
             if(resp.data.success ) return resp.data.data
             else throw new Error("Failed to fetch Complaints");
         }catch(err){   
@@ -23,6 +23,24 @@ export const fetchComplaints = createAsyncThunk(
             }
         }
     }
+)
+
+
+export const searchComplaint = createAsyncThunk(
+  "complaint/searchcomplaints",
+  async (q) => {
+      try{
+          const resp = await axios.get(`/complaint/search?q=${q}`);
+          if(resp.data.success ) return resp.data.data
+          else throw new Error("Failed to fetch Complaints");
+      }catch(err){   
+          if (err.response && err.response.data && err.response.data.message) {
+            throw new Error(err.response.data.message);
+          } else {
+            throw err
+          }
+      }
+  }
 )
 
 
@@ -38,7 +56,7 @@ const complaintSlice = createSlice(
             },
             complaintSuccess : (state,{payload})=>{
               state.loading = false;
-              state.products = payload;
+              state.complaints = payload;
               state.error = '';
             },
             complaintFail : (state,{error})=>{
@@ -48,21 +66,31 @@ const complaintSlice = createSlice(
             complaintClear : (state)=>{
               state.loading = false;
               state.error = ''
-              state.products = []
+              state.complaints = []
               
             }
           },
         extraReducers: (builder) => {
             builder
-                .addCase(fetchComplaints.pending, (state) =>{
+                .addCase(FetchComplaints.pending, (state) =>{
                     complaintSlice.caseReducers.complaintLoad(state);
                 })
-                .addCase(fetchComplaints.fulfilled, (state,{payload}) =>{
+                .addCase(FetchComplaints.fulfilled, (state,{payload}) =>{
                     complaintSlice.caseReducers.complaintSuccess(state,{payload});
                 })
-                .addCase(fetchComplaints.rejected, (state,{error}) =>{
+                .addCase(FetchComplaints.rejected, (state,{error}) =>{
                     complaintSlice.caseReducers.complaintFail(state,{error});
                 })
+                .addCase(searchComplaint.pending, (state) =>{
+                  complaintSlice.caseReducers.complaintLoad(state);
+                })
+                .addCase(searchComplaint.fulfilled, (state,{payload}) =>{
+                    complaintSlice.caseReducers.complaintSuccess(state,{payload});
+                })
+                .addCase(searchComplaint.rejected, (state,{error}) =>{
+                    complaintSlice.caseReducers.complaintFail(state,{error});
+                })
+              
         }
     }
 )
