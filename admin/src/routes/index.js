@@ -12,7 +12,11 @@ import Users from '../pages/Users';
 import AnalyticsLayout from '../layouts/AnalyticsLayout';
 import AnalyticsWelcome from '../components/AnalyticsWelcome/AnalyticsWelcome';
 import LineGraph from '../components/LineGraph/LineGraph';
+import OrdersLayout from '../layouts/OrdersLayout';
+import { NotDeliveredOrdersDisplay } from '../components/NotDeliveredOrdersDisplay/NotDeliveredOrdersDisplay';
+import {DeliveredOrdersDisplay} from '../components/DeliveredOrdersDisplay/DeliveredOrdersDisplay';
 // import {fetchProductData} from '../helper/productsFetch'
+import { UpdateOrder } from '../components/UpdateOrder/UpdateOrder';
 
 export const SiteRouter = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +36,13 @@ export const SiteRouter = createBrowserRouter(
           <Route path='analytics' element={<AnalyticsLayout/>}>
             <Route index element={<AnalyticsWelcome/>}/>
             <Route path='products' element={<LineGraph/>}/>
+          <Route path="orders" element={<OrdersLayout/>}>
+            <Route index element={<NotDeliveredOrdersDisplay/>} />
+            <Route path="notdelivered" element={<NotDeliveredOrdersDisplay />} />
+            <Route path="delivered" element={<DeliveredOrdersDisplay/>} />
+            <Route path="notdelivered/:id" element={<NotDeliveredOrdersDisplay />} />
+            <Route path="delivered/:id" element={<NotDeliveredOrdersDisplay />} />
+            <Route path="update/:id" element={<UpdateOrder/>} />
           </Route>
         </Route>
       </Route>
