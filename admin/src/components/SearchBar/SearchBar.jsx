@@ -33,6 +33,7 @@ const SearchBar = ({type}) => {
         />
         <button type="submit" className="search-button">Search</button>
       </form>
+      <button className="search-button">All</button>
     </div>
   );
 };
