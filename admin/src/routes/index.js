@@ -17,6 +17,7 @@ import { NotDeliveredOrdersDisplay } from '../components/NotDeliveredOrdersDispl
 import {DeliveredOrdersDisplay} from '../components/DeliveredOrdersDisplay/DeliveredOrdersDisplay';
 // import {fetchProductData} from '../helper/productsFetch'
 import { UpdateOrder } from '../components/UpdateOrder/UpdateOrder';
+import ComplaintLayout from '../layouts/ComplaintLayout';
 
 export const SiteRouter = createBrowserRouter(
   createRoutesFromElements(
@@ -45,6 +46,7 @@ export const SiteRouter = createBrowserRouter(
             <Route path="delivered/:id" element={<NotDeliveredOrdersDisplay />} />
             <Route path="update/:id" element={<UpdateOrder/>} />
           </Route>
+          <Route path='complaints' element={<ComplaintLayout/>}/>
         </Route>
       </Route>
       <Route path='/admin/auth' element={<AuthLayout/>}>

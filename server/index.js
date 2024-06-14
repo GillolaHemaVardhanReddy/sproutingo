@@ -8,6 +8,7 @@ import userRoutes from './routes/user.routes.js'
 import orderRoutes from "./routes/orders.routes.js"
 import cors from 'cors'
 import AnalyticRoutes from './routes/analytics.routes.js'
+import complaintRoutes from './routes/complaint.routes.js'
 
 dotenv.config()
 
@@ -29,6 +30,7 @@ app.use('/api/product',productRoutes)
 app.use('/api/user',userRoutes)
 app.use('/api/order',orderRoutes)
 app.use('/api/analytics',AnalyticRoutes)
+app.use('/api/complaint',complaintRoutes)
 
 // error handler middleware
 app.use((err,req,res,next)=>{
