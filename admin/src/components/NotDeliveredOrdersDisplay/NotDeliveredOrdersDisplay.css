@@ -66,7 +66,9 @@
     color: #333;
     width:100%;
 }
-
+.orders div{
+    padding: 10px;
+}
 .outer div {
     background-color: rgb(206, 201, 201);
     color:black;
@@ -86,3 +88,23 @@
     padding:5px;
 }
 
+.edit-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff; /* Bootstrap primary blue */
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .edit-button:hover {
+    background-color: #0056b3; /* Darker blue for hover */
+    border-color: #004085;
+  }
+  
