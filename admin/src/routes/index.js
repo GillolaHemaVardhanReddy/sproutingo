@@ -11,6 +11,7 @@ import UserLayout from '../layouts/UserLayout';
 import Users from '../pages/Users';
 import AnalyticsLayout from '../layouts/AnalyticsLayout';
 import AnalyticsWelcome from '../components/AnalyticsWelcome/AnalyticsWelcome';
+import ComplaintLayout from '../layouts/ComplaintLayout';
 // import {fetchProductData} from '../helper/productsFetch'
 
 export const SiteRouter = createBrowserRouter(
@@ -31,6 +32,8 @@ export const SiteRouter = createBrowserRouter(
           <Route path='analytics' element={<AnalyticsLayout/>}>
             <Route index element={<AnalyticsWelcome/>}/>
             <Route path='products' element/>
+          </Route>
+          <Route path='complaints' element={<ComplaintLayout />}>
           </Route>
         </Route>
       </Route>
