@@ -9,7 +9,6 @@ import orderRoutes from "./routes/orders.routes.js"
 import complaintRoutes from "./routes/complaint.routes.js"
 import cors from 'cors'
 import AnalyticRoutes from './routes/analytics.routes.js'
-import complaintRoutes from './routes/complaint.routes.js'
 
 dotenv.config()
 

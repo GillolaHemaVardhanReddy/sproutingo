@@ -18,7 +18,6 @@ import {DeliveredOrdersDisplay} from '../components/DeliveredOrdersDisplay/Deliv
 import ComplaintLayout from '../layouts/ComplaintLayout';
 // import {fetchProductData} from '../helper/productsFetch'
 import { UpdateOrder } from '../components/UpdateOrder/UpdateOrder';
-import ComplaintLayout from '../layouts/ComplaintLayout';
 
 export const SiteRouter = createBrowserRouter(
   createRoutesFromElements(
