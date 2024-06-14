@@ -52,13 +52,11 @@
     margin-top: 20px;
 }
 
-/* Table header and row styles */
 .orders{
     display: grid;
     grid-template-columns: 5% 15% 15% 15% 12% 5% 15% 15% 10% 10% ;
     gap: 10px;
     padding: 10px;
-    /* background-color: #f0f0f0; */
     align-items: center;
     border-radius: 5px;
     font-weight: bold;
@@ -66,7 +64,9 @@
     color: #333;
     width:100%;
 }
-
+.orders div{
+    padding: 10px;
+}
 .outer div {
     background-color: rgb(206, 201, 201);
     color:black;

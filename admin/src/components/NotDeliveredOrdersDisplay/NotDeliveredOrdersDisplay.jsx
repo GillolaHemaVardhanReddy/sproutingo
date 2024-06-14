@@ -32,13 +32,13 @@ export const NotDeliveredOrdersDisplay =  (props)=>{
      <div >S.NO</div> 
      <div >Order ID</div>
      <div >User ID</div>
-     <div >Is Products Delivered</div>
+     <div >Status</div>
      <div >Message</div>
-     <div>Is Paid</div>
+     <div>Payment</div>
      <div >Ordered Date</div>
      <div >Delivery Date</div>
      <div>Edit</div>
-     <div>User-Product Details</div>
+     <div>Action</div>
      </div>
     )
   }
@@ -90,7 +90,7 @@ export const NotDeliveredOrdersDisplay =  (props)=>{
 
   return (
      <div className="block">
-     {index==-1 ? 
+     {index===-1 ? 
       <div className="section">
          <GetHeading/>
          <GetOrderDetails/>
