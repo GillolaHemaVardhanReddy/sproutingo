@@ -69,7 +69,7 @@
   background-color: #f9f9f9;
 }
 
-.search-icon {
+ .user-display-container .search .search-icon {
   width: 25px;
   height: 25px;
   cursor: pointer;

@@ -13,18 +13,21 @@ import {
 import refreshReducer from './features/refresh.slice'
 import storage from 'redux-persist/lib/storage'
 import productReducer from './features/product.slice'
+import analyticsReducer from './features/analytics.slice'
+import userDetailsReducer from './features/user.slice';
 
 const persistConfig = {
     key: 'root',
     storage,
     version: 1,
-    manualPersist: true
 }
 
 const rootReducer= combineReducers({
     'auth': authReducer,
     'refresh': refreshReducer,
     'product' : productReducer,
+    'analytics' : analyticsReducer,
+    'user': userDetailsReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

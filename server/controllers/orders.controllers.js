@@ -25,7 +25,7 @@ export const createOrder = async (req, res, next) => { // todo validate order in
 export const getTotalOrdersDelivered =  async (req,res,next)=> {
     if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     try{
-        const totalOrdersDelivered = await orders.find({isDelivered:true}); 
+        const totalOrdersDelivered = await orders.find({isDelivered:true}).populate('userId',['name','email']).populate('products.productId','name'); 
         res.status(200).json(totalOrdersDelivered);
     }
     catch(err){
@@ -36,7 +36,7 @@ export const getTotalOrdersDelivered =  async (req,res,next)=> {
 export const getTotalOrdersNotDelivered =  async (req,res,next)=> {
     if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     try{
-        const totalOrdersNotDelivered = await orders.find({isDelivered:false}); 
+        const totalOrdersNotDelivered = await orders.find({isDelivered:false}).populate('userId',['name','email']).populate('products.productId','name'); 
         res.status(200).json(totalOrdersNotDelivered);
     }
     catch(err){
@@ -203,10 +203,9 @@ export const deleteOrder = async (req,res,next) => {
 
 export const getOrdersByOrderId = async (req,res,next) => {
     try{
-
         if (!mongoose.isValidObjectId(req.params.id)) 
             return next( returnError(400,'Invalid order id'));
-        const orderDetails = await orders.findById(req.params.id)
+        const orderDetails = await orders.findById(req.params.id).populate('userId',['name','email']).populate('products.productId','name');;
         if(!orderDetails) return next(returnError(404,'order not found'))
         res.status(200).json({
             success:true,
@@ -220,10 +219,14 @@ export const getOrdersByOrderId = async (req,res,next) => {
 export const updateDetails = async (req,res,next) => {
     if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     try{
-        if (!mongoose.isValidObjectId(req.body.id)) 
-            return next( returnError(400,'Invalid order id'));
-        
-    } catch(err) {
-        next(err);
+        if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
+        const updatedProduct = await orders.findByIdAndUpdate({_id:req.params.id},{
+            $set: req.body
+        },{new:true})
+        res.status(200).json({success:true,data:updatedProduct})
+    }catch(err){
+        console.error("Error update product controller");
+        if (err instanceof mongoose.CastError) return next(returnError(400, 'enter valid details to update'));
+        next(err)
     }
 }

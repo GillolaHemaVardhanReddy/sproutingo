@@ -19,10 +19,10 @@ const router = express.Router()
 
 //get totalordersdelivered till now (authenticated only for admin)
 router.get('/all/delivered',Authentication,getTotalOrdersDelivered)
-
+router.get('/all/delivered/:id',Authentication,getDeliveredOrdersByDate)
 //get totalordersnotdelivered till now (authenticated only for admin) (yet to be delivered)
 router.get('/all/notdelivered',Authentication,getTotalOrdersNotDelivered)
-
+router.get('/all/notdelivered/:id',Authentication,getNotDeliveredOrdersByDate)
 //get deliveredorders of loggid in users
 router.get('/delivered',Authentication,getDeliveredOrdersByUserId)
 
