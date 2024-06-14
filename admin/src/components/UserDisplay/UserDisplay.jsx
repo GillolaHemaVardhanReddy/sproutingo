@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import './UserDisplay.css'
+import { useDispatch, useSelector } from 'react-redux'
 import searchIcon from '../../assets/search_icon.png'
 import axios from 'axios'
 import ReactTimeAgo from 'react-time-ago';
+import { fetchUserDetail } from '../../redux/features/user.slice';
 
 const UserDisplay = () => {
+  const dispatch = useDispatch()
   const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState('latest');
@@ -18,9 +21,13 @@ const UserDisplay = () => {
     }
   };
 
+const userDetails = useSelector(state=>state.user.userDetails)
+console.log(userDetails)
+
   useEffect(() => {
     fetchUsers();
-  }, []);
+    dispatch(fetchUserDetail())
+  }, [dispatch]);
 
 
   const handleSearchInputChange = (e) => {
