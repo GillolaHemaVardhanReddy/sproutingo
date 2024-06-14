@@ -36,6 +36,7 @@ export const SiteRouter = createBrowserRouter(
           <Route path='analytics' element={<AnalyticsLayout/>}>
             <Route index element={<AnalyticsWelcome/>}/>
             <Route path='products' element={<LineGraph/>}/>
+          </Route>
           <Route path="orders" element={<OrdersLayout/>}>
             <Route index element={<NotDeliveredOrdersDisplay/>} />
             <Route path="notdelivered" element={<NotDeliveredOrdersDisplay />} />
