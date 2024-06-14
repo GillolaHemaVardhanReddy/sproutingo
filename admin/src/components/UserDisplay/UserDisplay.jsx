@@ -1,46 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import './UserDisplay.css'
 import { useDispatch, useSelector } from 'react-redux'
-import searchIcon from '../../assets/search_icon.png'
-import axios from 'axios'
 import ReactTimeAgo from 'react-time-ago';
-import { fetchUserDetail } from '../../redux/features/user.slice';
+import { fetchUserDetail, searchUserDetail } from '../../redux/features/user.slice';
+import { useRef } from 'react';
 
 const UserDisplay = () => {
   const dispatch = useDispatch()
-  const [users, setUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const searchRef = useRef()
   const [sortOrder, setSortOrder] = useState('latest');
 
-  const fetchUsers = async () => {
-    try {
-      const resp = await axios.get('/user/all');
-      setUsers(resp.data.data);
-    } catch (err) {
-      console.log('Error fetching users', err)
-    }
-  };
+let userDetails = useSelector(state=>state.user.userDetails)
 
-const userDetails = useSelector(state=>state.user.userDetails)
-console.log(userDetails)
+console.log(searchQuery)
 
   useEffect(() => {
-    fetchUsers();
     dispatch(fetchUserDetail())
-  }, [dispatch]);
+    dispatch(searchUserDetail(searchQuery))
+  }, [dispatch,searchQuery]);
 
 
-  const handleSearchInputChange = (e) => {
-    const q = e.target.value.toLowerCase()
-    console.log(q)
-    setSearchQuery(e.target.value);
+  const handleSearchInputChange = () => {
+    setSearchQuery(searchRef.current.value);
   };
 
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
   };
 
-  const sortedUsers = [...users].sort((a, b) => {
+  userDetails = [...userDetails].sort((a, b) => {
     if (sortOrder === 'latest') {
       return new Date(b.createdAt) - new Date(a.createdAt);
     } else {
@@ -49,36 +38,16 @@ console.log(userDetails)
   });
 
 
-  const filteredUsers = ()=>{
-    let query = searchQuery;
-    if(searchQuery==='active'){
-      query = false
-    }else if(searchQuery==='deleted' || searchQuery==='delete'){
-        query = true
-    }
-    return sortedUsers.filter(user => 
-      user.name.toLowerCase().includes(query) ||
-      user.email.toLowerCase().includes(query) ||
-      (typeof user.phone === 'number' && user.phone.toString().includes(query)) ||
-      user.address.some(address =>
-        Object.values(address).some(value =>
-          String(value).toLowerCase().includes(query)
-        )
-      ) ||
-      user.isdeleted === query
-    );
-  }
 
   return (
     <div className='user-display-container'>
       <div className='search'>
         <input
           type='text'
+          ref={searchRef}
           placeholder='Search...'
-          value={searchQuery}
-          onChange={handleSearchInputChange}
         />
-        <img src={searchIcon} alt='Search' className='search-icon' />
+        <button onClick={handleSearchInputChange}>Search</button>
       </div>
       <table className='user-display-table'>
         <thead>
@@ -99,7 +68,7 @@ console.log(userDetails)
           </tr>
         </thead>
         <tbody>
-          {filteredUsers().map(user => {
+          {userDetails.map(user => {
             return (
               <tr key={user._id}>
                 <td>{user.name}</td>
