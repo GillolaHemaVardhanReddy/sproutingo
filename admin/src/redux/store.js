@@ -27,12 +27,9 @@ const rootReducer= combineReducers({
     'auth': authReducer,
     'refresh': refreshReducer,
     'product' : productReducer,
-<<<<<<< Updated upstream
     'analytics': analyticReducer,
-=======
     'analytics' : analyticsReducer,
     'user': userDetailsReducer
->>>>>>> Stashed changes
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
