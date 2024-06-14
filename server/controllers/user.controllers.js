@@ -255,3 +255,63 @@ export const getWishlist = async (req, res, next) => {
         next(returnError(err));
     }
 };
+
+export const userGlobalSearch = async (req, res, next) => {
+    try {
+        const searchTerm = req.query.q;
+        if (!searchTerm) {
+            return res.status(400).json({ success:false, error: "Please provide a search term" });
+        }  
+
+        if (searchTerm.length < 3) {
+            return res.status(400).json({ success:false, error: "Search term must be at least 3 characters long" });
+        }
+
+        const isActiveFilter = {}
+
+
+        const regex = new RegExp(searchTerm, 'i');
+
+        let deletedFilter = {isdeleted: false}
+
+        if(req.role==='admin'){
+            deletedFilter = {}
+        }
+
+        const filter = [
+            deletedFilter,
+            {
+                $or: [
+                    { name: regex },
+                    { email: regex },
+                    {$expr: {
+                        $regexMatch: {
+                            input: { $toString: "$phone" },
+                            regex: searchTerm,
+                            options: "i"
+                        }
+                    }},
+                    {address: {
+                        $elemMatch: {
+                          $or: [
+                            { street: regex },
+                            { city: regex },
+                            { country: regex },
+                            { state: regex },
+                            { pincode: regex },
+                            { type: regex }
+                          ]
+                        }
+                    }}
+                ]
+            }
+        ]
+        
+        const users = await User.find(
+            {$and : filter}
+        );
+        res.status(200).json({ success:true, data: users });
+    }catch(err){
+        next(err)
+    }
+}
