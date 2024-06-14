@@ -26,7 +26,7 @@ export const UpdateOrder = ()=>{
         console.log(res);
     }
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="update-order-container">
             <div>
             <label className="text">Order ID</label>{orders._id}
             </div>

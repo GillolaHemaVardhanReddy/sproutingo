@@ -91,7 +91,7 @@ export const DeliveredOrdersDisplay =  (props)=>{
 
   return (
      <div className="block">
-     {index==-1 ? 
+     {index===-1 ? 
       <div className="section">
          <GetHeading/>
          <GetOrderDetails/>
