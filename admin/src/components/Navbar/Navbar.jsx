@@ -6,6 +6,7 @@ import { logoutStart, logoutSuccess } from '../../redux/features/auth.slice';
 import { useDispatch } from 'react-redux'
 import axios from 'axios';
 import { clearState } from '../../redux/features/product.slice'
+import { analyticsProductClear } from '../../redux/features/analytics.slice';
 
 const Navbar = () => {
   const dispatch = useDispatch()
@@ -17,6 +18,7 @@ const Navbar = () => {
       console.log(resp)
       dispatch(logoutSuccess())
       dispatch(clearState())
+      dispatch(analyticsProductClear())
       navigate('/admin/auth')
     }catch(err){
       console.log(err)
