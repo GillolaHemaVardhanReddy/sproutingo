@@ -1,23 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import './ComplaintDisplay.css';
 import axios from 'axios';
 import ReactTimeAgo from 'react-time-ago';
 import {useDispatch, useSelector} from 'react-redux'
-import {FetchComplaints, searchComplaint} from '../../redux/features/complaint.slice'
+import {FetchComplaints} from '../../redux/features/complaint.slice'
+import SearchBar from '../SearchBar/SearchBar';
 function ComplaintDisplay() {
   const dispatch = useDispatch();
-  const searchInputRef = useRef();
   const items = useSelector(state => state.complaint.complaints)
 
   useEffect(()=>{
     dispatch(FetchComplaints())
   }, [dispatch]);
   
-
-  const handleSearch = ()=>{
-    const q = searchInputRef.current.value
-    dispatch(searchComplaint(q))
-  }
 
   const handleSolve = async (id) => {
     await axios.put(`/complaint/${id}`);
@@ -30,15 +25,15 @@ function ComplaintDisplay() {
       if(userConfirmed){
         //delete
         try{
-          const r = await axios.delete(`/complaint/${id}`);
+          await axios.delete(`/complaint/${id}`);
           dispatch(FetchComplaints())
         } catch(err) {
           console.log("error deleting complaints",err);
         }
       }
       }  catch(err){
-      console.log(err);
-    }
+        console.log(err);
+      }
   }
 
   return (
@@ -47,16 +42,7 @@ function ComplaintDisplay() {
         <div className="complaint-navbar">
           <p>Complaints</p>
         </div>
-        <div className="search-container">
-          <input
-              type='text'
-              placeholder='Search....'
-              ref={searchInputRef}
-            /> 
-            <div className='btn'>
-              <button onClick={handleSearch}>Search</button>
-            </div>
-        </div>
+        <SearchBar type="searchComplaint"/>
         <table className="complaint-display-table">
           <thead>
             <tr>

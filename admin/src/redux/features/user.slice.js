@@ -62,7 +62,10 @@ const userDetailsSlice = createSlice({
             state.loading = false;
             state.error = ''
             state.userDetails = []
-          }  
+          },
+          userErrorClear : (state)=>{
+            state.error = ''
+          }
     },
     extraReducers: (builder) => {
         builder
@@ -87,6 +90,6 @@ const userDetailsSlice = createSlice({
         }
 });
 
-export const {userDetailClear} = userDetailsSlice.actions
+export const {userDetailClear , userErrorClear} = userDetailsSlice.actions
 
 export default userDetailsSlice.reducer

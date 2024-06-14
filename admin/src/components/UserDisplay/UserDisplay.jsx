@@ -2,28 +2,20 @@ import React, { useState, useEffect } from 'react'
 import './UserDisplay.css'
 import { useDispatch, useSelector } from 'react-redux'
 import ReactTimeAgo from 'react-time-ago';
-import { fetchUserDetail, searchUserDetail } from '../../redux/features/user.slice';
-import { useRef } from 'react';
+import { fetchUserDetail } from '../../redux/features/user.slice';
+import { SetError } from '../ErrorMessage/ErrorMessage';
+import SearchBar from '../SearchBar/SearchBar';
 
 const UserDisplay = () => {
   const dispatch = useDispatch()
-  const [searchQuery, setSearchQuery] = useState('');
-  const searchRef = useRef()
   const [sortOrder, setSortOrder] = useState('latest');
 
-let userDetails = useSelector(state=>state.user.userDetails)
-
-console.log(searchQuery)
+  let userDetails = useSelector(state=>state.user.userDetails)
 
   useEffect(() => {
     dispatch(fetchUserDetail())
-    dispatch(searchUserDetail(searchQuery))
-  }, [dispatch,searchQuery]);
+  }, [dispatch]);
 
-
-  const handleSearchInputChange = () => {
-    setSearchQuery(searchRef.current.value);
-  };
 
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
@@ -37,18 +29,10 @@ console.log(searchQuery)
     }
   });
 
-
-
   return (
     <div className='user-display-container'>
-      <div className='search'>
-        <input
-          type='text'
-          ref={searchRef}
-          placeholder='Search...'
-        />
-        <button onClick={handleSearchInputChange}>Search</button>
-      </div>
+      <SetError/>
+      <SearchBar type="searchUserDetail"/>
       <table className='user-display-table'>
         <thead>
           <tr>

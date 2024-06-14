@@ -66,7 +66,9 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = ''
       state.products = []
-      
+    },
+    productClearError : (state)=>{
+      state.error = ''
     }
   },
   extraReducers:(builder)=>{
@@ -92,6 +94,6 @@ const productSlice = createSlice({
   }
 })
 
-export const {clearState} = productSlice.actions
+export const {clearState , productClearError} = productSlice.actions
 
 export default productSlice.reducer
