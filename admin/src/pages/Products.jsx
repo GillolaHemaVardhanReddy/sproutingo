@@ -8,7 +8,7 @@ const Products = () => {
   // const data = useLoaderData()
   return (
     <div className='products-container'>
-      <SearchBar/>
+      <SearchBar type="productSearch"/>
       <ProductDisplay/>
     </div>
   )

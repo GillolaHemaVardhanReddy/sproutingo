@@ -2,8 +2,8 @@ import React from 'react'
 import './Navbar.css'
 import { useNavigate } from 'react-router-dom';
 import nav_log from '../../assets/logos/png/logo-no-background.png'
-import { logoutStart, logoutSuccess } from '../../redux/features/auth.slice';
-import { useDispatch } from 'react-redux'
+import { logOutAndClear, logoutStart, logoutSuccess } from '../../redux/features/auth.slice';
+import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios';
 import { clearState } from '../../redux/features/product.slice'
 import { analyticsProductClear } from '../../redux/features/analytics.slice';
@@ -14,12 +14,13 @@ const Navbar = () => {
   const handleLogout = ()=>{
     dispatch(logoutStart())
     try{
-      const resp = axios('/auth/signout')
-      console.log(resp)
-      dispatch(logoutSuccess())
-      dispatch(clearState())
-      dispatch(analyticsProductClear())
-      navigate('/admin/auth')
+      dispatch(logOutAndClear())
+      // const resp = axios('/auth/signout')
+      // console.log(resp)
+      // dispatch(logoutSuccess())
+      // dispatch(clearState())
+      // dispatch(analyticsProductClear())
+      // navigate('/admin/auth')
     }catch(err){
       console.log(err)
     }
