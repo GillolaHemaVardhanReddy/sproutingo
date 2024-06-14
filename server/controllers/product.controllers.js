@@ -1,3 +1,4 @@
+import { increaseLikeCount, increaseSearchCount, increaseUnlikeCount, increaseViewCount } from "../db/analytics.db.js"
 import { checkProductExist, getFilteredProduct, getProductByTag, searchProduct, searchProductGlobal } from "../db/product.db.js"
 import Like from "../models/likes.model.js"
 import Product from "../models/product.model.js"
@@ -23,6 +24,9 @@ export const getProductById = async (req,res,next)=>{
     try{
         if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
         const product = await checkProductExist(req.params.id)
+
+        await increaseViewCount(req.params.id)
+
         res.status(200).json({success:true,data:product})
     }catch(err){
         console.error("Error get product by id controller");
@@ -88,13 +92,22 @@ export const like = async (req,res,next)=>{
             if(likedProduct.like){
                 return res.status(200).json('already liked')
             }
+
+            await increaseLikeCount(req.params.id)
+
             const updatedProduct = await Like.findByIdAndUpdate({_id:likedProduct._id},{
                 $set: {like:true,unlike:false}
             },{new:true})
+
+            const likeProduct = await Product.findByIdAndUpdate(req.params.id, {
+                $inc: { unlikes: -1, likes: 1 }
+            }, { new: true });
+
             res.status(200).json({success:true,data:updatedProduct})
         }else{
             const newLike = Like({userId:req.user.id,productId:req.params.id,like:true,unlike:false})
             await newLike.save() 
+            await increaseLikeCount(req.params.id)
             return res.status(201).json({
                 success:true,
                 message:'liked successfully',
@@ -123,10 +136,19 @@ export const dislike = async (req,res,next)=>{
             const updatedProduct = await Like.findByIdAndUpdate({_id:likedProduct._id},{
                 $set: {like:false,unlike:true}
             },{new:true})
+            const unlikeProduct = await Product.findByIdAndUpdate(req.params.id, {
+                $inc: { unlikes: 1, likes: -1 }
+            }, { new: true });
+
+            await increaseUnlikeCount(req.params.id)
+
             res.status(200).json({success:true,data:updatedProduct})
         }else{
             const newLike = Like({userId:req.user.id,productId:req.params.id,like:false,unlike:true})
             await newLike.save()
+
+            await increaseUnlikeCount(req.params.id)
+
             return res.status(201).json({
                 success:true,
                 message:'unliked successfully',
@@ -176,10 +198,12 @@ export const getByTag = async (req,res,next)=>{
     try{
         const tags = req.query.tags.split(",")
         const finalResp = await getProductByTag(tags);
+        await increaseSearchCount(finalResp);
         res.status(200).json({
             success:true,
             data:finalResp
         })
+        
     }catch(err){    
         console.error("Error get by tag product controller");
         next(err)
@@ -193,6 +217,7 @@ export const search = async (req,res,next)=>{
             return  res.json('no product found').status(200)
         }
         const finalResp = await searchProduct(query);
+        await increaseSearchCount(finalResp);
         res.status(200).json({
             success:true,
             data:finalResp
@@ -210,6 +235,7 @@ export const globalSearch = async (req,res,next)=>{
             return  res.json('no product found').status(200)
         }
         const finalResp = await searchProductGlobal(query,req.role);
+        await increaseSearchCount(finalResp);
         res.status(200).json({
             success:true,
             data:finalResp

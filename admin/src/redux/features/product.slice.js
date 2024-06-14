@@ -15,8 +15,6 @@ export const fetchProducts = createAsyncThunk(
       const resp = await axios('/product/')
       if(resp.data.success){
         return resp.data.data 
-      }else{
-        throw new Error("Failed to load data")
       }
     }catch(err){
       if(err.response){
@@ -51,33 +49,49 @@ const productSlice = createSlice({
   name:"product",
   initialState,
   reducers:{
-
+    loadingState: (state) => {
+      state.loading = true
+      state.error = '';
+    },
+    successState : (state,{payload})=>{
+      state.loading = false;
+      state.products = payload;
+      state.error = '';
+    },
+    failState : (state,{error})=>{
+      state.loading = false;
+      state.error = error.message
+    },
+    clearState : (state)=>{
+      state.loading = false;
+      state.error = ''
+      state.products = []
+      
+    }
   },
   extraReducers:(builder)=>{
     builder
-      .addCase(fetchProducts.pending,(state)=>{
-        state.loading = true;
+      .addCase(fetchProducts.pending, (state) => {
+        productSlice.caseReducers.loadingState(state);
       })
-      .addCase(fetchProducts.fulfilled,(state,{payload})=>{
-        state.loading = false;
-        state.products = payload;
+      .addCase(fetchProducts.fulfilled, (state, { payload }) => {
+        productSlice.caseReducers.successState(state, { payload });
       })
-      .addCase(fetchProducts.rejected,(state,{error})=>{
-        state.loading = false;
-        state.error = error.message
+      .addCase(fetchProducts.rejected, (state, { error }) => {
+        productSlice.caseReducers.failState(state, { error });
       })
-      .addCase(productSearch.pending,(state)=>{
-        state.loading = true
+      .addCase(productSearch.pending, (state) => {
+        productSlice.caseReducers.loadingState(state);
       })
-      .addCase(productSearch.fulfilled,(state,{payload})=>{
-        state.loading = false;
-        state.products = payload;
+      .addCase(productSearch.fulfilled, (state, { payload }) => {
+        productSlice.caseReducers.successState(state, { payload });
       })
-      .addCase(productSearch.rejected,(state,{error})=>{
-        state.loading = false;
-        state.error = error.message
+      .addCase(productSearch.rejected, (state, { error }) => {
+        productSlice.caseReducers.failState(state, { error });
       })
   }
 })
+
+export const {clearState} = productSlice.actions
 
 export default productSlice.reducer

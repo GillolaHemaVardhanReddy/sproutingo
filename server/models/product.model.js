@@ -28,13 +28,14 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // imgUrls: {
-    //     type: [String],
-    //     validate: {
-    //         validator: urlValidator,
-    //         message: props => `${props.value} contains an invalid URL!`
-    //     },
-    // },
+    likes:{
+        type: Number,
+        default: 0
+    },
+    unlikes:{
+        type: Number,
+        default: 0
+    },
     desc: {
         type: String,
         required: true,

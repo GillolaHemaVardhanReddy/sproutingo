@@ -1,0 +1,29 @@
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-20px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(0px); }
+    90% { transform: translateX(20px); }
+    100% { transform: translateX(0); }
+  }
+  
+  .floating-error-message {
+    position: fixed;
+    top: 20px; 
+    left: 50%;
+    transform: translateX(-10%);
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000; 
+    animation: shake 0.5s;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  .floating-error-message.hidden {
+    opacity: 0;
+  }
+  
