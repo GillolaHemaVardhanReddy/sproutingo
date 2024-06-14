@@ -205,13 +205,6 @@ export const deleteOrder = async (req, res, next) => {
     }
 }
 
-export const getOrdersByOrderId = async (req, res, next) => {
-    try {
-
-        if (!mongoose.isValidObjectId(req.params.id))
-            return next(returnError(400, 'Invalid order id'));
-        const orderDetails = await orders.findById(req.params.id)
-        if (!orderDetails) return next(returnError(404, 'order not found'))
 export const getOrdersByOrderId = async (req,res,next) => {
     try{
         if (!mongoose.isValidObjectId(req.params.id)) 
@@ -227,14 +220,6 @@ export const getOrdersByOrderId = async (req,res,next) => {
     }
 }
 
-export const updateDetails = async (req, res, next) => {
-    if (req.role === 'user') return next(returnError(401, 'Unauthorized user'));
-    try {
-        if (!mongoose.isValidObjectId(req.body.id))
-            return next(returnError(400, 'Invalid order id'));
-
-    } catch (err) {
-        next(err);
 export const updateDetails = async (req,res,next) => {
     if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     try{
