@@ -17,7 +17,7 @@ const OrderNavbar = () => {
         <Link className="link" to="delivered">Delivered</Link>
     </div>
     <div className='search'>
-        <input type="text" value={date} placeholder="Search By Date...." onChange={handleDate}></input>
+        <input type="text" value={date} placeholder="Search By Delivery Date...." onChange={handleDate}></input>
         <Link className="link" to={`delivered/${date}`}>Delivered</Link>
         <Link className="link" to={`notdelivered/${date}`}>Not Delivered</Link>
     </div>
