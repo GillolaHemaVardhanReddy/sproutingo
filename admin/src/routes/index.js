@@ -17,6 +17,9 @@ import {DeliveredOrdersDisplay} from '../components/DeliveredOrdersDisplay/Deliv
 import ComplaintLayout from '../layouts/ComplaintLayout';
 // import {fetchProductData} from '../helper/productsFetch'
 import { UpdateOrder } from '../components/UpdateOrder/UpdateOrder';
+import {DeliveredOrdersByDate} from "../components/OrdersByDate/DeliveredOrdersByDate"
+import {NotDeliveredOrdersByDate} from "../components/OrdersByDate/NotDeliveredOrdersByDate"
+import { GetUserProductDetails } from '../components/UserOrderDetails/UserOrderDetails';
 
 export const SiteRouter = createBrowserRouter(
   createRoutesFromElements(
@@ -40,9 +43,10 @@ export const SiteRouter = createBrowserRouter(
             <Route index element={<NotDeliveredOrdersDisplay/>} />
             <Route path="notdelivered" element={<NotDeliveredOrdersDisplay />} />
             <Route path="delivered" element={<DeliveredOrdersDisplay/>} />
-            <Route path="notdelivered/:id" element={<NotDeliveredOrdersDisplay />} />
-            <Route path="delivered/:id" element={<NotDeliveredOrdersDisplay />} />
+            <Route path="notdelivered/:id" element={<NotDeliveredOrdersByDate />} />
+            <Route path="delivered/:id" element={<DeliveredOrdersByDate/>} />
             <Route path="update/:id" element={<UpdateOrder/>} />
+            <Route path="details/:id" element={<GetUserProductDetails/>} />
           </Route>
           <Route path='complaints' element={<ComplaintLayout/>}/>
         </Route>
