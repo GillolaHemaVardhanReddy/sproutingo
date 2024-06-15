@@ -5,20 +5,9 @@ import { useSelector } from 'react-redux';
 import { SetError } from '../components/ErrorMessage/ErrorMessage';
 
 const AuthLayout = () => {
-  const {isAuth,error} = useSelector(state=>state.auth)
-  let errorMsg = error.length>0 ? error : '';
-  const [isVisible, setIsVisible] = useState(false);
-  useEffect(() => {
-    if (error.length > 0) {
-      setIsVisible(true);
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-      }, 3000);
-      return () => clearTimeout(timer); 
-    }
-  }, [error]);
+  const {isAuth} = useSelector(state=>state.auth)
   return (<>
-      <SetError vanish={isVisible} error={errorMsg}/>
+      <SetError/>
       <div className='auth-container'>
         {isAuth ? <Navigate to='/admin/manage' /> : <Outlet/>}
       </div>

@@ -13,7 +13,9 @@ import {
 import refreshReducer from './features/refresh.slice'
 import storage from 'redux-persist/lib/storage'
 import productReducer from './features/product.slice'
-import analyticReducer from './features/analytics.slice'
+import analyticsReducer from './features/analytics.slice'
+import userDetailsReducer from './features/user.slice';
+import complaintReducer from './features/complaint.slice'
 
 const persistConfig = {
     key: 'root',
@@ -25,7 +27,9 @@ const rootReducer= combineReducers({
     'auth': authReducer,
     'refresh': refreshReducer,
     'product' : productReducer,
-    'analytics': analyticReducer,
+    'analytics' : analyticsReducer,
+    'user': userDetailsReducer,
+    'complaint' : complaintReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

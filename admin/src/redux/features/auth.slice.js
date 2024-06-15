@@ -1,5 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { complaintClear } from "./complaint.slice";
+import { clearState } from "./product.slice";
+import { userDetailClear } from "./user.slice";
 
 const initialState = {
   user: {},
@@ -26,16 +29,39 @@ export const fetchUser = createAsyncThunk('auth/fetchuser',async ({email,passwor
     }
 })
 
+export const logOutAndClear = createAsyncThunk('auth/logoutandclear',async (_, { dispatch, rejectWithValue }) => {
+  try {
+    const resp = await axios.get('/auth/signout/');
+    if (resp.data.success) {
+      dispatch(complaintClear());
+      dispatch(clearState())
+      dispatch(userDetailClear())
+      return resp.data.data;
+    } else {
+      throw new Error("Problem logging out");
+    }
+  } catch (err) {
+    if (err.response && err.response.data && err.response.data.message) {
+      return rejectWithValue(err.response.data.message);
+    } else {
+      return rejectWithValue(err.message);
+    }
+  }
+}
+);
+
+
 const AuthSlice = createSlice({
     name: 'auth',
     initialState,
     reducers:{
         logoutStart:(state)=>{
           state.loading = true;
+          state.error = ''
         },
         logoutSuccess : (state,{payload})=>{
           state.isAuth = false;
-          state.user = {}
+          state.user = payload
           state.error = ''
           state.loading = false
         },
@@ -61,7 +87,16 @@ const AuthSlice = createSlice({
         state.loading = false;
         state.error = error.message
         state.isAuth = false
-      });
+      })
+      .addCase(logOutAndClear.pending, (state)=>{
+        AuthSlice.caseReducers.logoutStart(state)
+      })
+      .addCase(logOutAndClear.fulfilled,(state,{payload})=>{
+        AuthSlice.caseReducers.logoutSuccess(state,{payload})
+      })
+      .addCase(logOutAndClear.rejected,(state,{error})=>{
+        AuthSlice.caseReducers.logoutFail(state,{error})
+      })
   },
 })
 

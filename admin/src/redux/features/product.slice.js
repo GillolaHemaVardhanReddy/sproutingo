@@ -66,7 +66,9 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = ''
       state.products = []
-      
+    },
+    productClearError : (state)=>{
+      state.error = ''
     }
   },
   extraReducers:(builder)=>{
@@ -87,11 +89,12 @@ const productSlice = createSlice({
         productSlice.caseReducers.successState(state, { payload });
       })
       .addCase(productSearch.rejected, (state, { error }) => {
+        console.log(error)
         productSlice.caseReducers.failState(state, { error });
       })
   }
 })
 
-export const {clearState} = productSlice.actions
+export const {clearState , productClearError} = productSlice.actions
 
 export default productSlice.reducer

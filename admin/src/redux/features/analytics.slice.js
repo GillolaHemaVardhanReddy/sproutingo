@@ -9,9 +9,8 @@ const initialState = {
 
 export const fetchProductAnalytic = createAsyncThunk(
   'analytics/fetchproductanalytic',
-  async ()=>{
+  async (_, {dispatch,rejectWithValue})=>{
     try{
-      console.log('entered analytics')
       const resp = await axios('/analytics/products/like')
      return resp.data.data
     }catch(err){

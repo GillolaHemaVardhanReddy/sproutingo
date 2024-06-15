@@ -11,10 +11,10 @@ import UserLayout from '../layouts/UserLayout';
 import Users from '../pages/Users';
 import AnalyticsLayout from '../layouts/AnalyticsLayout';
 import AnalyticsWelcome from '../components/AnalyticsWelcome/AnalyticsWelcome';
-import LineGraph from '../components/LineGraph/LineGraph';
 import OrdersLayout from '../layouts/OrdersLayout';
 import { NotDeliveredOrdersDisplay } from '../components/NotDeliveredOrdersDisplay/NotDeliveredOrdersDisplay';
 import {DeliveredOrdersDisplay} from '../components/DeliveredOrdersDisplay/DeliveredOrdersDisplay';
+import ComplaintLayout from '../layouts/ComplaintLayout';
 // import {fetchProductData} from '../helper/productsFetch'
 import { UpdateOrder } from '../components/UpdateOrder/UpdateOrder';
 import {DeliveredOrdersByDate} from "../components/OrdersByDate/DeliveredOrdersByDate"
@@ -38,7 +38,6 @@ export const SiteRouter = createBrowserRouter(
           </Route>
           <Route path='analytics' element={<AnalyticsLayout/>}>
             <Route index element={<AnalyticsWelcome/>}/>
-            <Route path='products' element={<LineGraph/>}/>
           </Route>
           <Route path="orders" element={<OrdersLayout/>}>
             <Route index element={<NotDeliveredOrdersDisplay/>} />
@@ -49,6 +48,7 @@ export const SiteRouter = createBrowserRouter(
             <Route path="update/:id" element={<UpdateOrder/>} />
             <Route path="details/:id" element={<GetUserProductDetails/>} />
           </Route>
+          <Route path='complaints' element={<ComplaintLayout/>}/>
         </Route>
       </Route>
       <Route path='/admin/auth' element={<AuthLayout/>}>
@@ -56,5 +56,6 @@ export const SiteRouter = createBrowserRouter(
         <Route path='login' element={<Login/>}/> 
       </Route>
     </Route>
+    
   )
 );
