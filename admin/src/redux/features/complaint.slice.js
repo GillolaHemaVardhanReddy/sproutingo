@@ -3,14 +3,14 @@ import axios from "axios";
 
 
 const initialState = {
-    complaints: [],
-    loading: false,
-    error: "",
+  complaints: [],
+  loading: false,
+  error: "",
 }
 
 export const FetchComplaints = createAsyncThunk(
     "complaint/fetchcomplaints",
-    async() => {
+    async(_, { dispatch, rejectWithValue }) => {
         try{
             const resp = await axios.get('/complaint/');
             if(resp.data.success ) return resp.data.data
@@ -28,7 +28,7 @@ export const FetchComplaints = createAsyncThunk(
 
 export const searchComplaint = createAsyncThunk(
   "complaint/searchcomplaints",
-  async (q) => {
+  async (q,{ dispatch, rejectWithValue }) => {
       try{
           const resp = await axios.get(`/complaint/search?q=${q}`);
           if(resp.data.success ) return resp.data.data

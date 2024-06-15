@@ -2,14 +2,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 const initialState = {
-    userDetails: [],
-    loading: false,
-    error: ''
+  userDetails: [],
+  loading: false,
+  error: ''
 };
 
 export const fetchUserDetail = createAsyncThunk(
   'user/fetchuserdetail',
-  async ()=>{
+  async (_, { dispatch, rejectWithValue })=>{
     try{
       const resp = await axios.get(`/user/all`)
       if(resp.data.success){
@@ -26,7 +26,7 @@ export const fetchUserDetail = createAsyncThunk(
 
 export const searchUserDetail = createAsyncThunk(
   'user/searchuserdetail',
-  async (q)=>{
+  async (q,{ dispatch, rejectWithValue })=>{
     try{
       const resp = await axios.get(`/user/search?q=${q}`)
       if(resp.data.success){

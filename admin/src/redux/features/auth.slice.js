@@ -11,7 +11,7 @@ const initialState = {
   error: ''
 }
 
-export const fetchUser = createAsyncThunk('auth/fetchuser',async ({email,password})=>{
+export const fetchUser = createAsyncThunk('auth/fetchuser',async ({email,password},{ dispatch, rejectWithValue })=>{
     try{
         const resp = await axios.post('/auth/signin', { email, password });
         if(resp.data.success && resp.data.data.role==='admin') return {

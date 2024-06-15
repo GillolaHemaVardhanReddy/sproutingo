@@ -10,7 +10,7 @@ const initialState = {
 
 export const fetchProducts = createAsyncThunk(
   'product/fetchproduct',
-  async ()=>{
+  async (_, { dispatch, rejectWithValue })=>{
     try{
       const resp = await axios('/product/')
       if(resp.data.success){
@@ -27,7 +27,7 @@ export const fetchProducts = createAsyncThunk(
 
 export const productSearch = createAsyncThunk(
   'product/searchproduct',
-  async (q)=>{
+  async (q,{ dispatch, rejectWithValue })=>{
     try{
       const resp = await axios(`/product/search?q=${q}`)
       if(resp.data.success){
