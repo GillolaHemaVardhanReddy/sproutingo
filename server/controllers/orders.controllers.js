@@ -26,7 +26,10 @@ export const getTotalOrdersDelivered =  async (req,res,next)=> {
     if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     try{
         const totalOrdersDelivered = await orders.find({isDelivered:true}).populate('userId',['name','email']).populate('products.productId','name'); 
-        res.status(200).json(totalOrdersDelivered);
+        res.status(200).json({
+            success:true,
+            data:totalOrdersDelivered
+        });
     }
     catch(err){
         next(err);
@@ -37,7 +40,10 @@ export const getTotalOrdersNotDelivered =  async (req,res,next)=> {
     if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     try{
         const totalOrdersNotDelivered = await orders.find({isDelivered:false}).populate('userId',['name','email']).populate('products.productId','name'); 
-        res.status(200).json(totalOrdersNotDelivered);
+        res.status(200).json({
+            success:true,
+            data:totalOrdersNotDelivered
+        });
     }
     catch(err){
         next(err);
@@ -56,7 +62,7 @@ export const getNotDeliveredOrdersByDate =  async (req,res,next)=> {
                 $gte:currDate,
                 $lt:nextDate
             }
-        }); 
+        }).populate('userId',['name','email']).populate('products.productId','name');
         res.status(200).json({
             success:true,
             data:totalOrdersNotDelivered
@@ -79,7 +85,7 @@ export const getDeliveredOrdersByDate =  async (req,res,next)=> {
                 $gte:currDate,
                 $lt:nextDate
             }
-        }); 
+        }).populate('userId',['name','email']).populate('products.productId','name');; 
         res.status(200).json({
             success:true,
             data:totalOrdersDelivered
@@ -205,7 +211,7 @@ export const getOrdersByOrderId = async (req,res,next) => {
     try{
         if (!mongoose.isValidObjectId(req.params.id)) 
             return next( returnError(400,'Invalid order id'));
-        const orderDetails = await orders.findById(req.params.id).populate('userId',['name','email']).populate('products.productId','name');;
+        const orderDetails = await orders.findById(req.params.id).populate('userId',['name','email']).populate('products.productId','name');
         if(!orderDetails) return next(returnError(404,'order not found'))
         res.status(200).json({
             success:true,

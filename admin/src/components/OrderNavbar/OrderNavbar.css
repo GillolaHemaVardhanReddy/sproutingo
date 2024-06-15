@@ -48,7 +48,6 @@
     transition: border-color 0.3s ease;
     width:300px;
     font-size: 1rem;
-    margin-top:12px;
 }
 
 .OrderNavbar input[type="text"]:focus {
