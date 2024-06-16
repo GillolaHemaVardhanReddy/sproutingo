@@ -5,7 +5,7 @@ import { returnError } from './error.js'
 export const Authentication = async (req,res,next)=>{
     const token = req.signedCookies.auth
     if(!token){
-        return next(returnError(401, 'No authentication token provided'));
+        return next(returnError(401, 'Please Login to continue'));
     }
     try{
         const decoded = jwt.verify(token, process.env.JWT_SECRET);

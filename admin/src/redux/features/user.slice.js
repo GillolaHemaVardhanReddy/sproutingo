@@ -20,6 +20,7 @@ export const fetchUserDetail = createAsyncThunk(
         return resp.data.data
       }
     }catch(err){
+      dispatch(complaintClear())
       if(err.response){
         throw new Error(err.response.data.message)
       }

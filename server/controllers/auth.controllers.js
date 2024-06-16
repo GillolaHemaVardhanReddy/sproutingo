@@ -37,7 +37,7 @@ export const signin = async (req,res,next)=>{
         const {password , ...remain} = user.toObject();
         console.log(chalk.green.bgWhite('cleared all rules successfully and sent cookie'))
         res.cookie('auth',token, {
-             maxAge:2 * 24 * 60 * 60 * 1000,
+             maxAge: 1000,
              signed: true,
              httpOnly:true
             } ).status(200).json({success:true,data:remain})

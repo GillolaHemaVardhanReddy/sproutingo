@@ -5,6 +5,7 @@ import ReactTimeAgo from 'react-time-ago';
 import {useDispatch, useSelector} from 'react-redux'
 import {FetchComplaints} from '../../redux/features/complaint.slice'
 import SearchBar from '../SearchBar/SearchBar';
+import { SetError } from '../ErrorMessage/ErrorMessage';
 function ComplaintDisplay() {
   const dispatch = useDispatch();
   const items = useSelector(state => state.complaint.complaints)
@@ -38,6 +39,7 @@ function ComplaintDisplay() {
 
   return (
     <div className="complaint-display-container">
+      <SetError type="clearComplaintError"/>
       <div className="complaint-display">
         <div className="complaint-navbar">
           <p>Complaints</p>

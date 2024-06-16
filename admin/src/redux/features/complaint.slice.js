@@ -22,7 +22,8 @@ export const FetchComplaints = createAsyncThunk(
             }
             else throw new Error("Failed to fetch Complaints");
         }catch(err){   
-            if (err.response && err.response.data && err.response.data.message) {
+            dispatch(userDetailClear())
+            if (err.response) {
               throw new Error(err.response.data.message);
             } else {
               throw err
@@ -77,6 +78,9 @@ const complaintSlice = createSlice(
               state.loading = false;
               state.error = ''
               state.complaints = []
+            },
+            clearComplaintError : (state)=>{
+              state.error = ''
             }
           },
         extraReducers: (builder) => {
@@ -106,5 +110,5 @@ const complaintSlice = createSlice(
 
 
 
-export const {complaintClear} = complaintSlice.actions
+export const {complaintClear,clearComplaintError} = complaintSlice.actions
 export default complaintSlice.reducer

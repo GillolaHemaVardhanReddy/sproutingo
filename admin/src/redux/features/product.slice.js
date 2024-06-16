@@ -21,6 +21,8 @@ export const fetchProducts = createAsyncThunk(
         return resp.data.data 
       }
     }catch(err){
+      dispatch(userDetailClear())
+      dispatch(complaintClear())
       if(err.response){
         throw new Error(err.response.data.message)
       }
