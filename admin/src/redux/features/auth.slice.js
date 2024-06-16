@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { complaintClear } from "./complaint.slice";
-import { clearState } from "./product.slice";
+import { clearProduct, clearState } from "./product.slice";
 import { userDetailClear } from "./user.slice";
 
 const initialState = {
@@ -36,6 +36,7 @@ export const logOutAndClear = createAsyncThunk('auth/logoutandclear',async (_, {
       dispatch(complaintClear());
       dispatch(clearState())
       dispatch(userDetailClear())
+      dispatch(clearProduct())
       return resp.data.data;
     } else {
       throw new Error("Problem logging out");
@@ -68,7 +69,7 @@ const AuthSlice = createSlice({
         logoutFail : (state,{payload})=>{
           state.error = payload
         },
-        clearError: (state) => {
+        clearAuthError: (state) => {
           state.error = '';
         },
     },
@@ -107,5 +108,5 @@ export const {
   logoutStart,
   logoutSuccess,
   logoutFail,
-  clearError
+  clearAuthError
 } = AuthSlice.actions

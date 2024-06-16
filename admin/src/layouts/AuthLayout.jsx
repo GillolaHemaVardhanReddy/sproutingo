@@ -7,7 +7,7 @@ import { SetError } from '../components/ErrorMessage/ErrorMessage';
 const AuthLayout = () => {
   const {isAuth} = useSelector(state=>state.auth)
   return (<>
-      <SetError/>
+      <SetError type="clearAuthError"/>
       <div className='auth-container'>
         {isAuth ? <Navigate to='/admin/manage' /> : <Outlet/>}
       </div>

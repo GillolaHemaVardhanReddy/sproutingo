@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios";
+import { clearProduct } from "./product.slice";
+import { userDetailClear } from "./user.slice";
 
 
 const initialState = {
@@ -13,7 +15,11 @@ export const FetchComplaints = createAsyncThunk(
     async(_, { dispatch, rejectWithValue }) => {
         try{
             const resp = await axios.get('/complaint/');
-            if(resp.data.success ) return resp.data.data
+            if(resp.data.success ){
+              dispatch(clearProduct())
+              dispatch(userDetailClear())
+              return resp.data.data
+            }
             else throw new Error("Failed to fetch Complaints");
         }catch(err){   
             if (err.response && err.response.data && err.response.data.message) {
@@ -31,7 +37,11 @@ export const searchComplaint = createAsyncThunk(
   async (q,{ dispatch, rejectWithValue }) => {
       try{
           const resp = await axios.get(`/complaint/search?q=${q}`);
-          if(resp.data.success ) return resp.data.data
+          if(resp.data.success ){
+            dispatch(clearProduct())
+            dispatch(userDetailClear())
+            return resp.data.data
+          }
           else throw new Error("Failed to fetch Complaints");
       }catch(err){   
           if (err.response && err.response.data && err.response.data.message) {
@@ -67,7 +77,6 @@ const complaintSlice = createSlice(
               state.loading = false;
               state.error = ''
               state.complaints = []
-              
             }
           },
         extraReducers: (builder) => {

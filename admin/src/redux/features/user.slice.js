@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { clearProduct } from './product.slice';
+import { complaintClear } from './complaint.slice';
 
 const initialState = {
   userDetails: [],
@@ -13,6 +15,8 @@ export const fetchUserDetail = createAsyncThunk(
     try{
       const resp = await axios.get(`/user/all`)
       if(resp.data.success){
+        dispatch(clearProduct())
+        dispatch(complaintClear())
         return resp.data.data
       }
     }catch(err){

@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { userDetailClear } from './user.slice'
+import { complaintClear } from './complaint.slice'
 
 
 const initialState = {
@@ -14,6 +16,8 @@ export const fetchProducts = createAsyncThunk(
     try{
       const resp = await axios('/product/')
       if(resp.data.success){
+        dispatch(userDetailClear())
+        dispatch(complaintClear())
         return resp.data.data 
       }
     }catch(err){
@@ -69,6 +73,11 @@ const productSlice = createSlice({
     },
     productClearError : (state)=>{
       state.error = ''
+    },
+    clearProduct : (state)=>{
+      state.error = '';
+      state.products = [];
+      state.loading = false;
     }
   },
   extraReducers:(builder)=>{
@@ -95,6 +104,6 @@ const productSlice = createSlice({
   }
 })
 
-export const {clearState , productClearError} = productSlice.actions
+export const {clearState , productClearError , clearProduct} = productSlice.actions
 
 export default productSlice.reducer
