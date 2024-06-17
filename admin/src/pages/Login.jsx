@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './css/Login.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux'
+import { fetchUser } from '../redux/features/auth.slice'
+import { SetError } from '../components/ErrorMessage/ErrorMessage';
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
+  let error = ''
 
-  const handleEmailChange = (e) => {
+  const handleEmailChange = (e) => { 
     setEmail(e.target.value);
   };
 
@@ -17,31 +21,31 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
+  useEffect(() => {
+    if (error.length > 0) {
+      setIsVisible(true);
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+      }, 3000);
+      return () => clearTimeout(timer); 
+    }
+  }, [error]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
-      setError('Please enter both email and password.');
+      error = 'Please enter both email and password.';
     } else {
-      setError('');
-      try {
-        const resp = await axios.post('/auth/signin', { email, password });
-        console.log(resp.data.data.role)
-        if (resp.data.success && resp.data.data.role==='admin') {
-          localStorage.setItem('isAuth', 'true'); 
-          navigate('/admin/manage'); 
-        } else {
-          setError('Invalid login credentials Only admins are allowed');
-        }
-      } catch (err) {
-        setError('Error logging in. Please try again.');
-      }
+      dispatch(fetchUser({email,password}))
     }
   };
+
+
 
   return (
     <div className="login-container">
       <h2>Login</h2>
-      {error && <p className="error">{error}</p>}
+      <SetError vanish={isVisible} error={error} />
       <form onSubmit={handleSubmit}>
         <div className="input-container">
           <label>Email</label>

@@ -1,0 +1,108 @@
+/* .orders{
+    display: grid;
+    text-align: center;
+    grid-template-columns: 5% 15% 15% 15% 12% 5% 15% 15% 10% 10% ;
+}
+.block .section{
+    width:100%;
+    overflow-x: auto;
+}
+
+.outer{
+    font-size: 1rem;
+    font-weight: 600;
+}
+.orders div{
+    border:1px solid rgb(143, 139, 139);
+    padding:10px;
+}
+.uncheck{
+    color:red;
+    font-weight: 600;
+}
+.check{
+    font-weight: 600;
+    color:green;
+}
+
+.orders div button{
+    outline:none;
+    cursor: pointer;
+    padding:10px;
+    border-radius: .3rem;
+    font-weight: 500;
+    border:1px solid black;
+    color:black;
+} */
+
+/* General styles for the component */
+.block {
+    width:100%;
+}
+
+.section {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.details {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.orders{
+    display: grid;
+    grid-template-columns: 5% 15% 15% 15% 12% 5% 15% 15% 10% 10% ;
+    gap: 10px;
+    padding: 10px;
+    align-items: center;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+    width:100%;
+}
+.orders div{
+    padding: 10px;
+}
+.outer div {
+    background-color: rgb(206, 201, 201);
+    color:black;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    gap:10px;
+    width: 100%;
+}
+
+.details button .details-btn {
+    width:auto;
+    height: 30px;
+    border-radius: 10px;
+    padding:5px;
+}
+
+.edit-button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #007bff; /* Bootstrap primary blue */
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .edit-button:hover {
+    background-color: #0056b3; /* Darker blue for hover */
+    border-color: #004085;
+  }
+  

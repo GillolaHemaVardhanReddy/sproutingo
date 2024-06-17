@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import User from "../models/user.model.js"
 import { returnError } from "../utils/error.js"
 import bcrypt from 'bcrypt'
@@ -12,14 +13,15 @@ export const checkForUserSignup = async (email) => {
     }
 }
 
-export const createHashAndSave = async ({name,password,email})=>{
+export const createHashAndSave = async (body)=>{ 
     try{
         const salt = await bcrypt.genSalt();
-        password = await bcrypt.hash(password,salt);
-        const newUser = User({name,password,email})
+        body.password = await bcrypt.hash(body.password,salt);
+        const newUser = User(body)
         await newUser.save()
         return newUser 
     }catch(err){
+        if(err.code===11000) throw returnError(409,`${Object.keys(err.keyPattern)[0]} already exist`)
         throw returnError(500,"password encryption error")
     }
 }

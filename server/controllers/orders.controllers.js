@@ -14,7 +14,7 @@ export const createOrder = async (req, res, next) => { // todo validate order in
             products: user.cart,
         };
 
-        const newOrder = await createOrderAndSetCartToEmpty(req.user.id,new_order)
+        const newOrder = await createOrderAndSetCartToEmpty(req.user.id, new_order)
 
         res.status(201).json(newOrder);
     } catch (err) {
@@ -25,10 +25,13 @@ export const createOrder = async (req, res, next) => { // todo validate order in
 export const getTotalOrdersDelivered =  async (req,res,next)=> {
     if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     try{
-        const totalOrdersDelivered = await orders.find({isDelivered:true}); 
-        res.status(200).json(totalOrdersDelivered);
+        const totalOrdersDelivered = await orders.find({isDelivered:true}).populate('userId',['name','email']).populate('products.productId','name'); 
+        res.status(200).json({
+            success:true,
+            data:totalOrdersDelivered
+        });
     }
-    catch(err){
+    catch (err) {
         next(err);
     }
 }
@@ -36,66 +39,71 @@ export const getTotalOrdersDelivered =  async (req,res,next)=> {
 export const getTotalOrdersNotDelivered =  async (req,res,next)=> {
     if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     try{
-        const totalOrdersNotDelivered = await orders.find({isDelivered:false}); 
-        res.status(200).json(totalOrdersNotDelivered);
-    }
-    catch(err){
-        next(err);
-    }
-}
-
-export const getNotDeliveredOrdersByDate =  async (req,res,next)=> {
-    if(req.role==='user') return next(returnError(401,'Unauthorized user'));
-    try{
-        const currDate = new Date(req.params.Date).toISOString();
-        const date = new Date(req.params.Date); 
-        date.setDate(date.getDate()+1);
-        const nextDate = date.toISOString();
-        const totalOrdersNotDelivered = await orders.find({isDelivered:false,
-            deliveredDate:{
-                $gte:currDate,
-                $lt:nextDate
-            }
-        }); 
+        const totalOrdersNotDelivered = await orders.find({isDelivered:false}).populate('userId',['name','email']).populate('products.productId','name'); 
         res.status(200).json({
             success:true,
             data:totalOrdersNotDelivered
         });
     }
-    catch(err){
+    catch (err) {
         next(err);
     }
 }
 
-export const getDeliveredOrdersByDate =  async (req,res,next)=> {
-    if(req.role==='user') return next(returnError(401,'Unauthorized user'));
-    try{
+export const getNotDeliveredOrdersByDate = async (req, res, next) => {
+    if (req.role === 'user') return next(returnError(401, 'Unauthorized user'));
+    try {
         const currDate = new Date(req.params.Date).toISOString();
-        const date = new Date(req.params.Date); 
-        date.setDate(date.getDate()+1);
+        const date = new Date(req.params.Date);
+        date.setDate(date.getDate() + 1);
         const nextDate = date.toISOString();
-        const totalOrdersDelivered = await orders.find({isDelivered:true,
-            deliveredDate:{
-                $gte:currDate,
-                $lt:nextDate
+        const totalOrdersNotDelivered = await orders.find({
+            isDelivered: false,
+            deliveredDate: {
+                $gte: currDate,
+                $lt: nextDate
             }
-        }); 
+        }).populate('userId',['name','email']).populate('products.productId','name');
         res.status(200).json({
-            success:true,
-            data:totalOrdersDelivered
+            success: true,
+            data: totalOrdersNotDelivered
         });
     }
-    catch(err){
+    catch (err) {
         next(err);
     }
 }
 
-export const getDeliveredOrdersByProductName = async (req,res,next) => {
-    if(req.role==='user') return next(returnError(401,'Unauthorized user'));
-    try{
+export const getDeliveredOrdersByDate = async (req, res, next) => {
+    if (req.role === 'user') return next(returnError(401, 'Unauthorized user'));
+    try {
+        const currDate = new Date(req.params.Date).toISOString();
+        const date = new Date(req.params.Date);
+        date.setDate(date.getDate() + 1);
+        const nextDate = date.toISOString();
+        const totalOrdersDelivered = await orders.find({
+            isDelivered: true,
+            deliveredDate: {
+                $gte: currDate,
+                $lt: nextDate
+            }
+        }).populate('userId',['name','email']).populate('products.productId','name');; 
+        res.status(200).json({
+            success: true,
+            data: totalOrdersDelivered
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+}
+
+export const getDeliveredOrdersByProductName = async (req, res, next) => {
+    if (req.role === 'user') return next(returnError(401, 'Unauthorized user'));
+    try {
         const productName = req.params.productName;
         const productIds = await Product.aggregate([
-            { 
+            {
                 $match: { name: productName }
             },
             {
@@ -103,31 +111,31 @@ export const getDeliveredOrdersByProductName = async (req,res,next) => {
             }
 
         ]);
-        const productIdValues = productIds.map(obj =>  new mongoose.Types.ObjectId(obj._id));
+        const productIdValues = productIds.map(obj => new mongoose.Types.ObjectId(obj._id));
         const totalDeliveredOrdersByProductName = await orders.find({
             products: {
                 $elemMatch: {
                     productId: { $in: productIdValues }
                 }
             },
-            isDelivered:true
+            isDelivered: true
         });
         res.status(200).json({
-            success:true,
-            data:totalDeliveredOrdersByProductName
+            success: true,
+            data: totalDeliveredOrdersByProductName
         });
-    } catch(err){
+    } catch (err) {
         next(err);
     }
 }
 
 
-export const getNotDeliveredOrdersByProductName = async (req,res,next) => {
-    if(req.role==='user') return next(returnError(401,'Unauthorized user'));
-    try{
+export const getNotDeliveredOrdersByProductName = async (req, res, next) => {
+    if (req.role === 'user') return next(returnError(401, 'Unauthorized user'));
+    try {
         const productName = req.params.productName;
         const productIds = await Product.aggregate([
-            { 
+            {
                 $match: { name: productName }
             },
             {
@@ -135,84 +143,85 @@ export const getNotDeliveredOrdersByProductName = async (req,res,next) => {
             }
 
         ]);
-        const productIdValues = productIds.map(obj =>  new mongoose.Types.ObjectId(obj._id));
+        const productIdValues = productIds.map(obj => new mongoose.Types.ObjectId(obj._id));
         const totalNotDeliveredOrdersByProductName = await orders.find({
             products: {
                 $elemMatch: {
                     productId: { $in: productIdValues }
                 }
             },
-            isDelivered:false
+            isDelivered: false
         });
         res.status(200).json({
-            success:true,
-            data:totalNotDeliveredOrdersByProductName
+            success: true,
+            data: totalNotDeliveredOrdersByProductName
         });
-    } catch(err){
+    } catch (err) {
         next(err);
     }
 }
 
-export const getDeliveredOrdersByUserId = async (req,res,next) =>{
-    try{
-    const deliveredOrders = await  orders.find({
-        userId: req.user.id,
-        isDelivered:true
-    });
-    res.status(200).json({
-        success:true,
-        data:deliveredOrders
-    });
-    } catch(err){
+export const getDeliveredOrdersByUserId = async (req, res, next) => {
+    try {
+        const deliveredOrders = await orders.find({
+            userId: req.user.id,
+            isDelivered: true
+        });
+        res.status(200).json({
+            success: true,
+            data: deliveredOrders
+        });
+    } catch (err) {
         next(err);
     }
 }
 
-export const getNotDeliveredOrdersByUserId = async (req,res,next) =>{
-    try{
-    const notDeliveredOrders = await  orders.find({userId: req.user.id,
-        isDelivered:false});
-    res.status(200).json({
-        success:true,
-        data:notDeliveredOrders
-    });
-    } catch(err){
+export const getNotDeliveredOrdersByUserId = async (req, res, next) => {
+    try {
+        const notDeliveredOrders = await orders.find({
+            userId: req.user.id,
+            isDelivered: false
+        });
+        res.status(200).json({
+            success: true,
+            data: notDeliveredOrders
+        });
+    } catch (err) {
         next(err);
     }
 }
 
-export const deleteOrder = async (req,res,next) => {
-    try{
+export const deleteOrder = async (req, res, next) => {
+    try {
         const uid = req.params.id;
-        const delorder = await orders.find({userId: uid});
-        if(!delorder) return next(returnError(404,'Order doesnot exist'))
-        let msg = !req.role==='admin' ? "delete req sent successfully" : "order deleted"
-        if(req.role==='admin') await orders.findOneAndDelete({_id:uid});
+        const delorder = await orders.find({ userId: uid });
+        if (!delorder) return next(returnError(404, 'Order doesnot exist'))
+        let msg = !req.role === 'admin' ? "delete req sent successfully" : "order deleted"
+        if (req.role === 'admin') await orders.findOneAndDelete({ _id: uid });
         else {
             delorder.reqDelete = true;
             delorder.save()
-        } 
+        }
         res.status(200).json({
-            success:true,
-            data:msg
+            success: true,
+            data: msg
         });
-    } catch(err){
+    } catch (err) {
         next(err);
     }
 }
 
 export const getOrdersByOrderId = async (req,res,next) => {
     try{
-
         if (!mongoose.isValidObjectId(req.params.id)) 
             return next( returnError(400,'Invalid order id'));
-        const orderDetails = await orders.findById(req.params.id)
+        const orderDetails = await orders.findById(req.params.id).populate('userId',['name','email']).populate('products.productId','name');
         if(!orderDetails) return next(returnError(404,'order not found'))
         res.status(200).json({
-            success:true,
-            data:orderDetails
+            success: true,
+            data: orderDetails
         })
-    } catch(err){
+    } catch (err) {
         next(err);
     }
 }
@@ -220,10 +229,14 @@ export const getOrdersByOrderId = async (req,res,next) => {
 export const updateDetails = async (req,res,next) => {
     if(req.role==='user') return next(returnError(401,'Unauthorized user'));
     try{
-        if (!mongoose.isValidObjectId(req.body.id)) 
-            return next( returnError(400,'Invalid order id'));
-        
-    } catch(err) {
-        next(err);
+        if (!mongoose.isValidObjectId(req.params.id)) return next( returnError(400,'Invalid product id'));
+        const updatedProduct = await orders.findByIdAndUpdate({_id:req.params.id},{
+            $set: req.body
+        },{new:true})
+        res.status(200).json({success:true,data:updatedProduct})
+    }catch(err){
+        console.error("Error update product controller");
+        if (err instanceof mongoose.CastError) return next(returnError(400, 'enter valid details to update'));
+        next(err)
     }
 }

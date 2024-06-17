@@ -41,7 +41,7 @@ const addressSchema = new mongoose.Schema({
     country: {
         type: String,
         default: "India",
-    },
+    }
 });
 
 
@@ -86,7 +86,7 @@ const userSchema = new mongoose.Schema({
     },
     phone: {
         type: Number,
-        // unique: true,
+        unique: [true,'phone number already taken'],
         validate: {
             validator: phoneValidate,
             message: props => `${props.value} is not a valid 10 digit phone number!`
@@ -99,6 +99,10 @@ const userSchema = new mongoose.Schema({
     role: {
         type:String,
         default: 'user'
+    },
+    isdeleted: {
+        type: Boolean,
+        default: false
     }
 },{timestamps:true});
 

@@ -1,0 +1,114 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import axios from "axios";
+import { clearProduct } from "./product.slice";
+import { userDetailClear } from "./user.slice";
+
+
+const initialState = {
+  complaints: [],
+  loading: false,
+  error: "",
+}
+
+export const FetchComplaints = createAsyncThunk(
+    "complaint/fetchcomplaints",
+    async(_, { dispatch, rejectWithValue }) => {
+        try{
+            const resp = await axios.get('/complaint/');
+            if(resp.data.success ){
+              dispatch(clearProduct())
+              dispatch(userDetailClear())
+              return resp.data.data
+            }
+            else throw new Error("Failed to fetch Complaints");
+        }catch(err){   
+            dispatch(userDetailClear())
+            if (err.response) {
+              throw new Error(err.response.data.message);
+            } else {
+              throw err
+            }
+        }
+    }
+)
+
+
+export const searchComplaint = createAsyncThunk(
+  "complaint/searchcomplaints",
+  async (q,{ dispatch, rejectWithValue }) => {
+      try{
+          const resp = await axios.get(`/complaint/search?q=${q}`);
+          if(resp.data.success ){
+            dispatch(clearProduct())
+            dispatch(userDetailClear())
+            return resp.data.data
+          }
+          else throw new Error("Failed to fetch Complaints");
+      }catch(err){   
+          if (err.response && err.response.data && err.response.data.message) {
+            throw new Error(err.response.data.message);
+          } else {
+            throw err
+          }
+      }
+  }
+)
+
+
+
+const complaintSlice = createSlice(
+    {
+        name: "complaints",
+        initialState,
+        reducers:{
+            complaintLoad: (state) => {
+              state.loading = true
+              state.error = '';
+            },
+            complaintSuccess : (state,{payload})=>{
+              state.loading = false;
+              state.complaints = payload;
+              state.error = '';
+            },
+            complaintFail : (state,{error})=>{
+              state.loading = false;
+              state.error = error.message
+            },
+            complaintClear : (state)=>{
+              state.loading = false;
+              state.error = ''
+              state.complaints = []
+            },
+            clearComplaintError : (state)=>{
+              state.error = ''
+            }
+          },
+        extraReducers: (builder) => {
+            builder
+                .addCase(FetchComplaints.pending, (state) =>{
+                    complaintSlice.caseReducers.complaintLoad(state);
+                })
+                .addCase(FetchComplaints.fulfilled, (state,{payload}) =>{
+                    complaintSlice.caseReducers.complaintSuccess(state,{payload});
+                })
+                .addCase(FetchComplaints.rejected, (state,{error}) =>{
+                    complaintSlice.caseReducers.complaintFail(state,{error});
+                })
+                .addCase(searchComplaint.pending, (state) =>{
+                  complaintSlice.caseReducers.complaintLoad(state);
+                })
+                .addCase(searchComplaint.fulfilled, (state,{payload}) =>{
+                    complaintSlice.caseReducers.complaintSuccess(state,{payload});
+                })
+                .addCase(searchComplaint.rejected, (state,{error}) =>{
+                    complaintSlice.caseReducers.complaintFail(state,{error});
+                })
+              
+        }
+    }
+)
+
+
+
+export const {complaintClear,clearComplaintError} = complaintSlice.actions
+export default complaintSlice.reducer

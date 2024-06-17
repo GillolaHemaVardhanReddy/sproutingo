@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import './SearchBar.css';
-
-const SearchBar = ({ onSearch }) => {
+import { useDispatch } from 'react-redux'
+import { productSearch } from '../../redux/features/product.slice';
+import { searchUserDetail } from '../../redux/features/user.slice';
+import { searchComplaint } from '../../redux/features/complaint.slice';
+const SearchBar = ({type}) => {
   const [query, setQuery] = useState('');
 
+  const dispatch = useDispatch()
+  
   const handleChange = (e) => {
     setQuery(e.target.value);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(query)
+    console.log('entered')
+    if(type==="productSearch") dispatch(productSearch(query))
+    else if(type==="searchUserDetail") dispatch(searchUserDetail(query))
+    else if(type==="searchComplaint") dispatch(searchComplaint(query))
   };
 
   return (
@@ -25,6 +33,7 @@ const SearchBar = ({ onSearch }) => {
         />
         <button type="submit" className="search-button">Search</button>
       </form>
+      <button className="search-button">All</button>
     </div>
   );
 };

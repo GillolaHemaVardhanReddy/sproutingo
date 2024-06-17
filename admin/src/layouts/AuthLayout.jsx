@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import './css/AuthLayout.css';
+import { useSelector } from 'react-redux';
+import { SetError } from '../components/ErrorMessage/ErrorMessage';
 
 const AuthLayout = () => {
-  const isAuth = localStorage.getItem('isAuth') === 'true';
-  return (
-    <div className='auth-container'>
-      {isAuth ? <Navigate to='/admin/manage' /> : <Outlet/>}
-    </div>
+  const {isAuth} = useSelector(state=>state.auth)
+  return (<>
+      <SetError type="clearAuthError"/>
+      <div className='auth-container'>
+        {isAuth ? <Navigate to='/admin/manage' /> : <Outlet/>}
+      </div>
+    </>
   );
 };
 

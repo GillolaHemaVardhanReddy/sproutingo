@@ -2,8 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { Provider } from 'react-redux';
+import {persistor, store} from './redux/store'
+import { PersistGate } from 'redux-persist/integration/react';
+import TimeAgo from 'javascript-time-ago'
+
+import en from 'javascript-time-ago/locale/en'
+
+TimeAgo.addDefaultLocale(en)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <App />
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+    <App />
+    </PersistGate>
+  </Provider>
 );

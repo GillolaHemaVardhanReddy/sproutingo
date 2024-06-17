@@ -1,6 +1,6 @@
 import express from "express";
-import {getAllUsers, getUserById, getUserDetails, deleteUserAccount, updateUser, getCartDetails, addToCart, editCart, deleteCartProduct, getWishlist} from '../controllers/user.controllers.js'
-import { Authentication } from "../utils/authntication.js";
+import {getAllUsers, getUserById, getUserDetails, deleteUserAccount, updateUser, getCartDetails, addToCart, editCart, deleteCartProduct, getWishlist, userGlobalSearch} from '../controllers/user.controllers.js'
+import { Authentication, filteredAuthentication } from "../utils/authntication.js";
 
 const router = express.Router()
 
@@ -19,6 +19,9 @@ router.put('/cart',Authentication,editCart)
 // delete cart product (authenticated user only)
 router.delete('/cart',Authentication,deleteCartProduct)
 
+// get user details on search 
+router.get('/search',filteredAuthentication,userGlobalSearch)
+
 //wishlist (authenticated user)
 router.get('/wishlist',Authentication,getWishlist)
 
@@ -33,5 +36,7 @@ router.delete('/', Authentication, deleteUserAccount)
 
 // update user profile (authenticated user)
 router.put('/' , Authentication, updateUser)
+
+
 
 export default router
